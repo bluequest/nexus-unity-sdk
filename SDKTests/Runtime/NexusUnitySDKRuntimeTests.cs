@@ -8,10 +8,10 @@ using UnityEngine.TestTools;
 using static UnityEngine.Networking.UnityWebRequest;
 
 using Creator = NexusAPI_Attributions.Creator;
+using Group = NexusAPI_Attributions.Group;
 
 public class NexusUnitySDKRuntimeTests
 {
-	
 	public class AttributionAPITests
 	{
 		public static string CreatorIdRef = new string("");
@@ -139,8 +139,18 @@ public class NexusUnitySDKRuntimeTests
 					UnityEngine.Debug.Log("profileImage value: " + CreatorByIdResponse.profileImage);
 					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.profileImage));
 
-					// #TODO Test Group contents
-					//public List<Group> groups { get; set; }
+					// Test Group contents
+					foreach(Group GroupEntry in CreatorByIdResponse.groups)
+					{
+						UnityEngine.Debug.Log("GroupEntry name value: " + GroupEntry.name);
+						Assert.True(!String.IsNullOrEmpty(GroupEntry.name));
+
+						UnityEngine.Debug.Log("GroupEntry id value: " + GroupEntry.id);
+						Assert.True(!String.IsNullOrEmpty(GroupEntry.id));
+
+						UnityEngine.Debug.Log("GroupEntry status value: " + GroupEntry.status);
+						Assert.True(!String.IsNullOrEmpty(GroupEntry.status));
+					}
 
 					bGetCreatorDetailsByIdResponse = true;
 				}));
