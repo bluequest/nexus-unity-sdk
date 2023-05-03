@@ -5,6 +5,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.TestTools;
+using static NexusUnitySDKRuntimeTests.AttributionAPITests;
+using static NexusUnitySDKRuntimeTests.ReferralsAPITests;
 using static UnityEngine.Networking.UnityWebRequest;
 
 using Creator = NexusAPI_Attributions.Creator;
@@ -154,6 +156,102 @@ public class NexusUnitySDKRuntimeTests
 
 					bGetCreatorDetailsByIdResponse = true;
 				}));
+			}
+		}
+	}
+
+	public class ReferralsAPITests
+	{
+		[UnityTest]
+		public IEnumerator NexusUnitySDK_A_GetReferralByPlayerIDTest()
+		{
+			yield return new MonoBehaviourTest<GetReferralByPlayerIDTest>();
+		}
+
+		[UnityTest]
+		public IEnumerator NexusUnitySDK_A_GetReferralCodeForPlayerTest()
+		{
+			yield return new MonoBehaviourTest<GetReferralCodeForPlayerTest>();
+		}
+
+		[UnityTest]
+		public IEnumerator NexusUnitySDK_A_GetReferralByCodeTest()
+		{
+			yield return new MonoBehaviourTest<GetReferralByCodeTest>();
+		}
+
+		public class GetReferralByPlayerIDTest : MonoBehaviour, IMonoBehaviourTest
+		{
+			private bool bGetReferralByPlayerIDResponse = true; // #TODO init true as temp
+			public bool IsTestFinished
+			{
+				get { return bGetReferralByPlayerIDResponse; }
+			}
+		}
+
+		public class GetReferralCodeForPlayerTest : MonoBehaviour, IMonoBehaviourTest
+		{
+			private bool bGetReferralCodeForPlayerResponse = true; // #TODO init true as temp
+			public bool IsTestFinished
+			{
+				get { return bGetReferralCodeForPlayerResponse; }
+			}
+		}
+
+		public class GetReferralByCodeTest : MonoBehaviour, IMonoBehaviourTest
+		{
+			private bool bGetReferralByCodeResponse = true; // #TODO init true as temp
+			public bool IsTestFinished
+			{
+				get { return bGetReferralByCodeResponse; }
+			}
+		}
+	}
+
+	public class BountiesAPITests
+	{
+		[UnityTest]
+		public IEnumerator NexusUnitySDK_A_GetBountiesTest()
+		{
+			yield return new MonoBehaviourTest<GetBountiesTest>();
+		}
+
+		[UnityTest]
+		public IEnumerator NexusUnitySDK_A_GetBountyByIdTest()
+		{
+			yield return new MonoBehaviourTest<GetBountyByIdTest>();
+		}
+
+		[UnityTest]
+		public IEnumerator NexusUnitySDK_A_GetBountyProgressByCreatorIdTest()
+		{
+			yield return new MonoBehaviourTest<GetBountyProgressByCreatorIdTest>();
+		}
+
+		public class GetBountiesTest : MonoBehaviour, IMonoBehaviourTest
+		{
+			private bool bGetBountiesResponse = true; // #TODO init true as temp
+			public bool IsTestFinished
+			{
+				get { return bGetBountiesResponse; }
+			}
+		}
+
+		public class GetBountyByIdTest : MonoBehaviour, IMonoBehaviourTest
+		{
+			private bool bGetBountyByIdResponse = true; // #TODO init true as temp
+			public bool IsTestFinished
+			{
+				get { return bGetBountyByIdResponse; }
+			}
+		}
+
+		public class GetBountyProgressByCreatorIdTest : MonoBehaviour, IMonoBehaviourTest
+		{
+			private bool bGetBountyProgressByCreatorIdResponse = true; // #TODO init true as temp
+			public bool IsTestFinished
+			{
+				get { return bGetBountyProgressByCreatorIdResponse; }
 			}
 		}
 	}
