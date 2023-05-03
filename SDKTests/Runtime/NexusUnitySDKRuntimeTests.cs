@@ -126,6 +126,7 @@ public class NexusUnitySDKRuntimeTests
 					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
 					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
 
+					// #TODO #SDK Note: Revisit. These tests below are currently failing on current Attributions API GetCreatorByIdRequest call due to empty content 
 					UnityEngine.Debug.Log("id value: " + CreatorByIdResponse.id);
 					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.id));
 
@@ -153,6 +154,7 @@ public class NexusUnitySDKRuntimeTests
 						UnityEngine.Debug.Log("GroupEntry status value: " + GroupEntry.status);
 						Assert.True(!String.IsNullOrEmpty(GroupEntry.status));
 					}
+					// #TODO #SDK Note: ~End GetCreatorByIdRequest tests failing note
 
 					bGetCreatorDetailsByIdResponse = true;
 				}));
@@ -187,6 +189,22 @@ public class NexusUnitySDKRuntimeTests
 			{
 				get { return bGetReferralByPlayerIDResponse; }
 			}
+
+			/* #TODO #SDK Revisit test
+			void Start()
+			{
+				string playerIdtest = "0Con-WN07cuBMdEkr56oo"; // #TODO pull this ID from player query
+				string groupIdTest = "";
+				UnityEngine.Debug.Log("Requesting GetReferralByPlayerID...");
+					// #TODO #SDK No callback param in current Referrals API GetReferralByPlayerID call
+				StartCoroutine(NexusAPI_Referrals.GetReferralByPlayerID(playerIdtest, groupIdTest, (UnityWebRequestResult, GetReferralByPlayerIDResponse) =>
+				{
+					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
+					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
+					GetReferralByPlayerIDResponse = true;
+				}));
+			}
+			*/
 		}
 
 		public class GetReferralCodeForPlayerTest : MonoBehaviour, IMonoBehaviourTest
@@ -235,6 +253,20 @@ public class NexusUnitySDKRuntimeTests
 			{
 				get { return bGetBountiesResponse; }
 			}
+
+			/* #TODO #SDK Note: Revisit test
+			{
+				UnityEngine.Debug.Log("Requesting GetBounties...");
+					// #TODO #SDK No callback param in current Bounties API GetBounties call
+					// #TODO #SDK NexusAPI_Bounties does not exist, instead NexusAPI_ does in Bounties API
+				StartCoroutine(NexusAPI_Bounties.GetBounties((UnityWebRequestResult, GetBountiesResponse) =>
+				{
+					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
+					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
+					GetBountiesResponse = true;
+				}));
+			}
+			*/
 		}
 
 		public class GetBountyByIdTest : MonoBehaviour, IMonoBehaviourTest

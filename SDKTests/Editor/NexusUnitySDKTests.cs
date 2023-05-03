@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
+// #TODO May not need editor (EditMode) tests for SDK. Runtime test may be sufficient enough
 public class NexusUnitySDKTests
 {
 	public class AttributionAPITests
