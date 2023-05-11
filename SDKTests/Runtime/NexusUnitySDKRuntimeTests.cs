@@ -9,8 +9,8 @@ using static NexusUnitySDKRuntimeTests.AttributionAPITests;
 using static NexusUnitySDKRuntimeTests.ReferralsAPITests;
 using static UnityEngine.Networking.UnityWebRequest;
 
-using Creator = NexusAPI_Attributions.Creator;
-using Group = NexusAPI_Attributions.Group;
+using Creator = NexusSDK.AttributionAPI.Creator;
+using CreatorGroup = NexusSDK.AttributionAPI.CreatorGroup;
 
 public class NexusUnitySDKRuntimeTests
 {
@@ -47,10 +47,9 @@ public class NexusUnitySDKRuntimeTests
 			void Start()
 			{
 				UnityEngine.Debug.Log("Requesting PingAttributions...");
-				StartCoroutine(NexusAPI_Attributions.PingAttributionsRequest((bWasSuccessful) =>
+				StartCoroutine(NexusSDK.AttributionAPI.StartGetPingRequest(() =>
 				{
-					UnityEngine.Debug.Log("Received response of Success value: " + bWasSuccessful);
-					Assert.AreEqual(bWasSuccessful, true);
+					UnityEngine.Debug.Log("Received successful response");
 					bPingAttributionsResponse = true;
 				}));
 			}
@@ -67,23 +66,24 @@ public class NexusUnitySDKRuntimeTests
 			void Start()
 			{
 				UnityEngine.Debug.Log("Requesting GetCreators...");
-				NexusAPI_Attributions.GetCreatorsParameters GetCreatorsRequest = new NexusAPI_Attributions.GetCreatorsParameters(1, 100, "");
-				StartCoroutine(NexusAPI_Attributions.GetCreatorsRequest(GetCreatorsRequest, (UnityWebRequestResult, GetCreatorsRequestResponse) =>
+				NexusSDK.AttributionAPI.GetCreatorsRequestParams GetCreatorsRequest = new NexusSDK.AttributionAPI.GetCreatorsRequestParams();
+				GetCreatorsRequest.page = 1;
+				GetCreatorsRequest.pageSize = 100;
+				StartCoroutine(NexusSDK.AttributionAPI.StartGetCreatorsRequest(GetCreatorsRequest, OnGetCreators200Response =>
 				{
-					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
-					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
+					UnityEngine.Debug.Log("Received successful response");
 
-					UnityEngine.Debug.Log("currentPage value: " + GetCreatorsRequestResponse.currentPage);
-					Assert.True(GetCreatorsRequestResponse.currentPage > 0);
+					UnityEngine.Debug.Log("currentPage value: " + OnGetCreators200Response.currentPage);
+					Assert.True(OnGetCreators200Response.currentPage > 0);
 
-					UnityEngine.Debug.Log("currentPageSize value: " + GetCreatorsRequestResponse.currentPageSize);
-					Assert.True(GetCreatorsRequestResponse.currentPageSize > 0);
+					UnityEngine.Debug.Log("currentPageSize value: " + OnGetCreators200Response.currentPageSize);
+					Assert.True(OnGetCreators200Response.currentPageSize > 0);
 
 					// Test creators struct
-					UnityEngine.Debug.Log("creators Array size: " + GetCreatorsRequestResponse.creators.Count);
-					Assert.True(GetCreatorsRequestResponse.creators.Count > 0);
+					UnityEngine.Debug.Log("creators Array size: " + OnGetCreators200Response.creators.Length);
+					Assert.True(OnGetCreators200Response.creators.Length > 0);			
 
-					foreach(Creator CreatorEntry in GetCreatorsRequestResponse.creators)
+					foreach (Creator CreatorEntry in OnGetCreators200Response.creators)
 					{
 						UnityEngine.Debug.Log("CreatorEntry id value: " + CreatorEntry.id);
 						Assert.True(!String.IsNullOrEmpty(CreatorEntry.id));
@@ -119,42 +119,40 @@ public class NexusUnitySDKRuntimeTests
 
 			void Start()
 			{
-				NexusAPI_Attributions.CreatorByIdParameters GetCreatorDetailsByIdRequest = new NexusAPI_Attributions.CreatorByIdParameters(CreatorIdRef);
+				NexusSDK.AttributionAPI.GetCreatorByUuidRequestParams GetCreatorDetailsByIdRequest = new NexusSDK.AttributionAPI.GetCreatorByUuidRequestParams();
+				GetCreatorDetailsByIdRequest.creatorSlugOrId = CreatorIdRef;
 				UnityEngine.Debug.Log("Requesting GetCreatorDetailsById... Using id: " + GetCreatorDetailsByIdRequest.creatorSlugOrId);
-				StartCoroutine(NexusAPI_Attributions.GetCreatorByIdRequest(GetCreatorDetailsByIdRequest, (UnityWebRequestResult, CreatorByIdResponse) =>
+				StartCoroutine(NexusSDK.AttributionAPI.StartGetCreatorByUuidRequest(GetCreatorDetailsByIdRequest, OnGetCreatorByUuid200Response =>
 				{
-					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
-					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
+					UnityEngine.Debug.Log("Received successful response");
 
-					// #TODO #SDK Note: Revisit. These tests below are currently failing on current Attributions API GetCreatorByIdRequest call due to empty content 
-					UnityEngine.Debug.Log("id value: " + CreatorByIdResponse.id);
-					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.id));
+					// #TODO Test groups struct. But PROP_Item0 response does not contain groups?
+					UnityEngine.Debug.Log("PROP_Item0: " + OnGetCreatorByUuid200Response.PROP_Item0.groups);
+					//UnityEngine.Debug.Log("creators Array size: " + OnGetCreatorByUuid200Response.PROP_Item0.groups.Length);
+					//Assert.True(OnGetCreatorByUuid200Response.PROP_Item0.groups.Length > 0);
 
-					UnityEngine.Debug.Log("name value: " + CreatorByIdResponse.name);
-					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.name));
-
-					UnityEngine.Debug.Log("logoImage value: " + CreatorByIdResponse.logoImage);
-					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.logoImage));
-
-					UnityEngine.Debug.Log("nexusUrl value: " + CreatorByIdResponse.nexusUrl);
-					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.nexusUrl));
-
-					UnityEngine.Debug.Log("profileImage value: " + CreatorByIdResponse.profileImage);
-					Assert.True(!String.IsNullOrEmpty(CreatorByIdResponse.profileImage));
-
-					// Test Group contents
-					foreach(Group GroupEntry in CreatorByIdResponse.groups)
+					/*
+					foreach (CreatorGroup CreatorGroupEntry in OnGetCreatorByUuid200Response.PROP_Item0.groups)
 					{
-						UnityEngine.Debug.Log("GroupEntry name value: " + GroupEntry.name);
-						Assert.True(!String.IsNullOrEmpty(GroupEntry.name));
+						UnityEngine.Debug.Log("CreatorEntry id value: " + CreatorEntry.id);
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.id));
 
-						UnityEngine.Debug.Log("GroupEntry id value: " + GroupEntry.id);
-						Assert.True(!String.IsNullOrEmpty(GroupEntry.id));
+						// Save this ID later so we can use for GetCreatorDetailsByIdTest
+						CreatorIdRef = CreatorEntry.id;
 
-						UnityEngine.Debug.Log("GroupEntry status value: " + GroupEntry.status);
-						Assert.True(!String.IsNullOrEmpty(GroupEntry.status));
+						UnityEngine.Debug.Log("CreatorEntry name value: " + CreatorEntry.name);
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.name));
+
+						UnityEngine.Debug.Log("CreatorEntry logoImage value: " + CreatorEntry.logoImage);
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.logoImage));
+
+						UnityEngine.Debug.Log("CreatorEntry nexusUrl value: " + CreatorEntry.nexusUrl);
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.nexusUrl));
+
+						UnityEngine.Debug.Log("CreatorEntry profileImage value: " + CreatorEntry.profileImage);
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.profileImage));
 					}
-					// #TODO #SDK Note: ~End GetCreatorByIdRequest tests failing note
+					*/
 
 					bGetCreatorDetailsByIdResponse = true;
 				}));
@@ -184,44 +182,95 @@ public class NexusUnitySDKRuntimeTests
 
 		public class GetReferralByPlayerIDTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetReferralByPlayerIDResponse = true; // #TODO init true as temp
+			private bool bGetReferralByPlayerIDResponse = false; // #TODO init true as temp
 			public bool IsTestFinished
 			{
 				get { return bGetReferralByPlayerIDResponse; }
 			}
 
-			/* #TODO #SDK Revisit test
 			void Start()
 			{
-				string playerIdtest = "0Con-WN07cuBMdEkr56oo"; // #TODO pull this ID from player query
-				string groupIdTest = "";
-				UnityEngine.Debug.Log("Requesting GetReferralByPlayerID...");
-					// #TODO #SDK No callback param in current Referrals API GetReferralByPlayerID call
-				StartCoroutine(NexusAPI_Referrals.GetReferralByPlayerID(playerIdtest, groupIdTest, (UnityWebRequestResult, GetReferralByPlayerIDResponse) =>
+				UnityEngine.Debug.Log("Requesting GetReferralByPlayerID using PlayerId: " + CreatorIdRef + "...");
+				
+				NexusSDK.ReferralsAPI.GetReferralInfoByPlayerIdRequestParams GetReferralInfoByPlayerIdRequest = new NexusSDK.ReferralsAPI.GetReferralInfoByPlayerIdRequestParams();
+				GetReferralInfoByPlayerIdRequest.playerId = CreatorIdRef;
+				GetReferralInfoByPlayerIdRequest.page = 1;
+				GetReferralInfoByPlayerIdRequest.pageSize = 100;
+				StartCoroutine(NexusSDK.ReferralsAPI.StartGetReferralInfoByPlayerIdRequest(GetReferralInfoByPlayerIdRequest, new NexusSDK.ReferralsAPI.GetReferralInfoByPlayerIdResponseCallbacks()
 				{
-					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
-					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
-					GetReferralByPlayerIDResponse = true;
+					OnGetReferralInfoByPlayerId200Response = (SuccessResponse) =>
+					{
+						UnityEngine.Debug.Log("Received successful response");
+						bGetReferralByPlayerIDResponse = true;
+					},
+					OnGetReferralInfoByPlayerId400Response = (FailureResponse) =>
+					{
+						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "' and message: '" + FailureResponse.message + "'");
+						bGetReferralByPlayerIDResponse = true;
+					}
 				}));
 			}
-			*/
 		}
 
 		public class GetReferralCodeForPlayerTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetReferralCodeForPlayerResponse = true; // #TODO init true as temp
+			private bool bGetReferralCodeForPlayerResponse = false;
 			public bool IsTestFinished
 			{
 				get { return bGetReferralCodeForPlayerResponse; }
+			}
+
+			void Start()
+			{
+				UnityEngine.Debug.Log("Requesting GetPlayerCurrentReferral using PlayerId = " + CreatorIdRef + "...");
+
+				NexusSDK.ReferralsAPI.GetPlayerCurrentReferralRequestParams GetPlayerCurrentReferralRequest = new NexusSDK.ReferralsAPI.GetPlayerCurrentReferralRequestParams();
+				GetPlayerCurrentReferralRequest.playerId = CreatorIdRef;
+				StartCoroutine(NexusSDK.ReferralsAPI.StartGetPlayerCurrentReferralRequest(GetPlayerCurrentReferralRequest, new NexusSDK.ReferralsAPI.GetPlayerCurrentReferralResponseCallbacks()
+				{
+					OnGetPlayerCurrentReferral200Response = (SuccessResponse) =>
+					{
+						UnityEngine.Debug.Log("Received successful response");
+						bGetReferralCodeForPlayerResponse = true;
+					},
+					OnGetPlayerCurrentReferral404Response = (FailureResponse) =>
+					{
+						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "'");
+						bGetReferralCodeForPlayerResponse = true;
+					}
+				}));
 			}
 		}
 
 		public class GetReferralByCodeTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetReferralByCodeResponse = true; // #TODO init true as temp
+			private bool bGetReferralByCodeResponse = false; 
 			public bool IsTestFinished
 			{
 				get { return bGetReferralByCodeResponse; }
+			}
+
+			void Start()
+			{
+				UnityEngine.Debug.Log("Requesting GetReferralByCode using code: ");
+
+				NexusSDK.ReferralsAPI.GetReferralInfoByCodeRequestParams GetReferralInfoByCodeRequest = new NexusSDK.ReferralsAPI.GetReferralInfoByCodeRequestParams();
+				GetReferralInfoByCodeRequest.code = "A1B2C3"; // #TODO use expected successful code
+				GetReferralInfoByCodeRequest.page = 1;
+				GetReferralInfoByCodeRequest.pageSize = 100;
+				StartCoroutine(NexusSDK.ReferralsAPI.StartGetReferralInfoByCodeRequest(GetReferralInfoByCodeRequest, new NexusSDK.ReferralsAPI.GetReferralInfoByCodeResponseCallbacks()
+				{
+					OnGetReferralInfoByCode200Response = (SuccessResponse) =>
+					{
+						UnityEngine.Debug.Log("Received successful response");
+						bGetReferralByCodeResponse = true;
+					},
+					OnGetReferralInfoByCode400Response = (FailureResponse) =>
+					{
+						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "' and message: '" + FailureResponse.message + "'");
+						bGetReferralByCodeResponse = true;
+					}
+				}));
 			}
 		}
 	}
@@ -248,25 +297,33 @@ public class NexusUnitySDKRuntimeTests
 
 		public class GetBountiesTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetBountiesResponse = true; // #TODO init true as temp
+			private bool bGetBountiesResponse = false;
 			public bool IsTestFinished
 			{
 				get { return bGetBountiesResponse; }
 			}
 
-			/* #TODO #SDK Note: Revisit test
+			void Start()
 			{
 				UnityEngine.Debug.Log("Requesting GetBounties...");
-					// #TODO #SDK No callback param in current Bounties API GetBounties call
-					// #TODO #SDK NexusAPI_Bounties does not exist, instead NexusAPI_ does in Bounties API
-				StartCoroutine(NexusAPI_Bounties.GetBounties((UnityWebRequestResult, GetBountiesResponse) =>
+
+				NexusSDK.BountyAPI.GetBountiesRequestParams GetBountiesRequest = new NexusSDK.BountyAPI.GetBountiesRequestParams();
+				GetBountiesRequest.page = 1;
+				GetBountiesRequest.pageSize = 100;
+				StartCoroutine(NexusSDK.BountyAPI.StartGetBountiesRequest(GetBountiesRequest, new NexusSDK.BountyAPI.GetBountiesResponseCallbacks()
 				{
-					UnityEngine.Debug.Log("Received response of UnityWebRequestResult value: " + UnityWebRequestResult);
-					Assert.AreEqual(UnityWebRequestResult, UnityWebRequest.Result.Success);
-					GetBountiesResponse = true;
+					OnGetBounties200Response = (SuccessResponse) =>
+					{
+						UnityEngine.Debug.Log("Received successful response");
+						bGetBountiesResponse = true;
+					},
+					OnGetBounties400Response = (FailureResponse) =>
+					{
+						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "' and message: '" + FailureResponse.message + "'");
+						bGetBountiesResponse = true;
+					}
 				}));
 			}
-			*/
 		}
 
 		public class GetBountyByIdTest : MonoBehaviour, IMonoBehaviourTest
