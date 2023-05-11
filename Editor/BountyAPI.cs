@@ -470,7 +470,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback.OnGetBounties200Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetBounties200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetBounties200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetBounties200Response(callbackData0);
                         }
 
@@ -478,7 +478,7 @@ namespace NexusSDK
                     case 400:
                         if (ResponseCallback.OnGetBounties400Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetBounties400Response(callbackData0);
                         }
 
@@ -590,7 +590,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback.OnGetBounty200Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetBounty200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetBounty200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetBounty200Response(callbackData0);
                         }
 
@@ -598,7 +598,7 @@ namespace NexusSDK
                     case 400:
                         if (ResponseCallback.OnGetBounty400Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetBounty400Response(callbackData0);
                         }
 
@@ -708,7 +708,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback.OnGetCreatorBountiesByID200Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetCreatorBountiesByID200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetCreatorBountiesByID200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetCreatorBountiesByID200Response(callbackData0);
                         }
 
@@ -716,7 +716,7 @@ namespace NexusSDK
                     case 400:
                         if (ResponseCallback.OnGetCreatorBountiesByID400Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetCreatorBountiesByID400Response(callbackData0);
                         }
 

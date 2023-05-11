@@ -132,7 +132,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback.OnGetReferralInfoByPlayerId200Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.GetReferralInfoByPlayerId200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.GetReferralInfoByPlayerId200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetReferralInfoByPlayerId200Response(callbackData0);
                         }
 
@@ -140,7 +140,7 @@ namespace NexusSDK
                     case 400:
                         if (ResponseCallback.OnGetReferralInfoByPlayerId400Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.ReferralError>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.ReferralError>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetReferralInfoByPlayerId400Response(callbackData0);
                         }
 
@@ -202,7 +202,7 @@ namespace NexusSDK
                     case 404:
                         if (ResponseCallback.OnGetPlayerCurrentReferral404Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.GetPlayerCurrentReferral404Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.GetPlayerCurrentReferral404Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetPlayerCurrentReferral404Response(callbackData0);
                         }
 
@@ -299,7 +299,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback.OnGetReferralInfoByCode200Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.GetReferralInfoByCode200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.GetReferralInfoByCode200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetReferralInfoByCode200Response(callbackData0);
                         }
 
@@ -307,7 +307,7 @@ namespace NexusSDK
                     case 400:
                         if (ResponseCallback.OnGetReferralInfoByCode400Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.ReferralError>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.ReferralsAPI.ReferralError>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback.OnGetReferralInfoByCode400Response(callbackData0);
                         }
 
