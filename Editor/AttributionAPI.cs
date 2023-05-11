@@ -124,7 +124,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetCreators200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetCreators200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback?.Invoke(callbackData0);
                         }
 
@@ -167,7 +167,7 @@ namespace NexusSDK
                     case 200:
                         if (ResponseCallback != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetCreatorByUuid200Response>(webRequest.downloadHandler.text);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetCreatorByUuid200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
                             ResponseCallback?.Invoke(callbackData0);
                         }
 
