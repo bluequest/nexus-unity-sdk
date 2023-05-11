@@ -5,8 +5,9 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.TestTools;
-using static NexusUnitySDKRuntimeTests.AttributionAPITests;
-using static NexusUnitySDKRuntimeTests.ReferralsAPITests;
+using static NexusUnitySDKRuntimeTests.A_AttributionAPITests;
+using static NexusUnitySDKRuntimeTests.B_ReferralsAPITests;
+using static NexusUnitySDKRuntimeTests.C_BountiesAPITests;
 using static UnityEngine.Networking.UnityWebRequest;
 
 using Creator = NexusSDK.AttributionAPI.Creator;
@@ -14,7 +15,7 @@ using CreatorGroup = NexusSDK.AttributionAPI.CreatorGroup;
 
 public class NexusUnitySDKRuntimeTests
 {
-	public class AttributionAPITests
+	public class A_AttributionAPITests
 	{
 		public static string CreatorIdRef = new string("");
 
@@ -73,35 +74,31 @@ public class NexusUnitySDKRuntimeTests
 				{
 					UnityEngine.Debug.Log("Received successful response");
 
-					UnityEngine.Debug.Log("currentPage value: " + OnGetCreators200Response.currentPage);
-					Assert.True(OnGetCreators200Response.currentPage > 0);
+					//UnityEngine.Debug.Log("currentPage value: " + OnGetCreators200Response.currentPage);
+					//UnityEngine.Debug.Log("creators Array size: " + OnGetCreators200Response.creators.Length);
+					//UnityEngine.Debug.Log("currentPageSize value: " + OnGetCreators200Response.currentPageSize);
 
-					UnityEngine.Debug.Log("currentPageSize value: " + OnGetCreators200Response.currentPageSize);
+					Assert.True(OnGetCreators200Response.currentPage > 0);
 					Assert.True(OnGetCreators200Response.currentPageSize > 0);
+					Assert.True(OnGetCreators200Response.creators.Length > 0);
 
 					// Test creators struct
-					UnityEngine.Debug.Log("creators Array size: " + OnGetCreators200Response.creators.Length);
-					Assert.True(OnGetCreators200Response.creators.Length > 0);			
-
 					foreach (Creator CreatorEntry in OnGetCreators200Response.creators)
 					{
-						UnityEngine.Debug.Log("CreatorEntry id value: " + CreatorEntry.id);
 						Assert.True(!String.IsNullOrEmpty(CreatorEntry.id));
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.name));
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.logoImage));
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.nexusUrl));
+						Assert.True(!String.IsNullOrEmpty(CreatorEntry.profileImage));
 
 						// Save this ID later so we can use for GetCreatorDetailsByIdTest
 						CreatorIdRef = CreatorEntry.id;
 
-						UnityEngine.Debug.Log("CreatorEntry name value: " + CreatorEntry.name);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.name));
-
-						UnityEngine.Debug.Log("CreatorEntry logoImage value: " + CreatorEntry.logoImage);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.logoImage));
-
-						UnityEngine.Debug.Log("CreatorEntry nexusUrl value: " + CreatorEntry.nexusUrl);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.nexusUrl));
-
-						UnityEngine.Debug.Log("CreatorEntry profileImage value: " + CreatorEntry.profileImage);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.profileImage));
+						//UnityEngine.Debug.Log("CreatorEntry id value: " + CreatorEntry.id);
+						//UnityEngine.Debug.Log("CreatorEntry name value: " + CreatorEntry.name);
+						//UnityEngine.Debug.Log("CreatorEntry logoImage value: " + CreatorEntry.logoImage);
+						//UnityEngine.Debug.Log("CreatorEntry nexusUrl value: " + CreatorEntry.nexusUrl);
+						//UnityEngine.Debug.Log("CreatorEntry profileImage value: " + CreatorEntry.profileImage);
 					}
 
 					bGetCreatorsResponse = true;
@@ -121,36 +118,32 @@ public class NexusUnitySDKRuntimeTests
 			{
 				NexusSDK.AttributionAPI.GetCreatorByUuidRequestParams GetCreatorDetailsByIdRequest = new NexusSDK.AttributionAPI.GetCreatorByUuidRequestParams();
 				GetCreatorDetailsByIdRequest.creatorSlugOrId = CreatorIdRef;
-				UnityEngine.Debug.Log("Requesting GetCreatorDetailsById... Using id: " + GetCreatorDetailsByIdRequest.creatorSlugOrId);
+				UnityEngine.Debug.Log("Requesting GetCreatorDetailsById... using CreatorId: " + GetCreatorDetailsByIdRequest.creatorSlugOrId);
 				StartCoroutine(NexusSDK.AttributionAPI.StartGetCreatorByUuidRequest(GetCreatorDetailsByIdRequest, OnGetCreatorByUuid200Response =>
 				{
 					UnityEngine.Debug.Log("Received successful response");
 
-					// #TODO Test groups struct. But PROP_Item0 response does not contain groups?
-					UnityEngine.Debug.Log("PROP_Item0: " + OnGetCreatorByUuid200Response.PROP_Item0.groups);
+					// #TODO Test groups struct. However currently, OnGetCreatorByUuid200Response.PROP_Item0.group comes out as null
+
+					//UnityEngine.Debug.Log("PROP_Item0.group's content: " + OnGetCreatorByUuid200Response.PROP_Item0.groups);
+					//UnityEngine.Debug.Log("PROP_Creator's Id: " + OnGetCreatorByUuid200Response.PROP_Creator.id);
+
 					//UnityEngine.Debug.Log("creators Array size: " + OnGetCreatorByUuid200Response.PROP_Item0.groups.Length);
 					//Assert.True(OnGetCreatorByUuid200Response.PROP_Item0.groups.Length > 0);
 
 					/*
 					foreach (CreatorGroup CreatorGroupEntry in OnGetCreatorByUuid200Response.PROP_Item0.groups)
 					{
-						UnityEngine.Debug.Log("CreatorEntry id value: " + CreatorEntry.id);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.id));
+						//UnityEngine.Debug.Log("CreatorGroupEntry name value: " + CreatorGroupEntry.name);
+						//UnityEngine.Debug.Log("CreatorGroupEntry id value: " + CreatorGroupEntry.id);
+						//UnityEngine.Debug.Log("CreatorGroupEntry status value: " + CreatorGroupEntry.status);
+
+						Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.name));
+						Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.id));
+						Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.status));
 
 						// Save this ID later so we can use for GetCreatorDetailsByIdTest
-						CreatorIdRef = CreatorEntry.id;
-
-						UnityEngine.Debug.Log("CreatorEntry name value: " + CreatorEntry.name);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.name));
-
-						UnityEngine.Debug.Log("CreatorEntry logoImage value: " + CreatorEntry.logoImage);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.logoImage));
-
-						UnityEngine.Debug.Log("CreatorEntry nexusUrl value: " + CreatorEntry.nexusUrl);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.nexusUrl));
-
-						UnityEngine.Debug.Log("CreatorEntry profileImage value: " + CreatorEntry.profileImage);
-						Assert.True(!String.IsNullOrEmpty(CreatorEntry.profileImage));
+						CreatorIdRef = CreatorGroupEntry.id;
 					}
 					*/
 
@@ -160,7 +153,7 @@ public class NexusUnitySDKRuntimeTests
 		}
 	}
 
-	public class ReferralsAPITests
+	public class B_ReferralsAPITests
 	{
 		[UnityTest]
 		public IEnumerator NexusUnitySDK_A_GetReferralByPlayerIDTest()
@@ -169,20 +162,20 @@ public class NexusUnitySDKRuntimeTests
 		}
 
 		[UnityTest]
-		public IEnumerator NexusUnitySDK_A_GetReferralCodeForPlayerTest()
+		public IEnumerator NexusUnitySDK_B_GetReferralCodeForPlayerTest()
 		{
 			yield return new MonoBehaviourTest<GetReferralCodeForPlayerTest>();
 		}
 
 		[UnityTest]
-		public IEnumerator NexusUnitySDK_A_GetReferralByCodeTest()
+		public IEnumerator NexusUnitySDK_C_GetReferralByCodeTest()
 		{
 			yield return new MonoBehaviourTest<GetReferralByCodeTest>();
 		}
 
 		public class GetReferralByPlayerIDTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetReferralByPlayerIDResponse = false; // #TODO init true as temp
+			private bool bGetReferralByPlayerIDResponse = false;
 			public bool IsTestFinished
 			{
 				get { return bGetReferralByPlayerIDResponse; }
@@ -190,8 +183,8 @@ public class NexusUnitySDKRuntimeTests
 
 			void Start()
 			{
-				UnityEngine.Debug.Log("Requesting GetReferralByPlayerID using PlayerId: " + CreatorIdRef + "...");
-				
+				UnityEngine.Debug.Log("Requesting GetReferralByPlayerID using CreatorId: " + CreatorIdRef + "...");
+
 				NexusSDK.ReferralsAPI.GetReferralInfoByPlayerIdRequestParams GetReferralInfoByPlayerIdRequest = new NexusSDK.ReferralsAPI.GetReferralInfoByPlayerIdRequestParams();
 				GetReferralInfoByPlayerIdRequest.playerId = CreatorIdRef;
 				GetReferralInfoByPlayerIdRequest.page = 1;
@@ -222,7 +215,7 @@ public class NexusUnitySDKRuntimeTests
 
 			void Start()
 			{
-				UnityEngine.Debug.Log("Requesting GetPlayerCurrentReferral using PlayerId = " + CreatorIdRef + "...");
+				UnityEngine.Debug.Log("Requesting GetPlayerCurrentReferral using CreatorId: " + CreatorIdRef + "...");
 
 				NexusSDK.ReferralsAPI.GetPlayerCurrentReferralRequestParams GetPlayerCurrentReferralRequest = new NexusSDK.ReferralsAPI.GetPlayerCurrentReferralRequestParams();
 				GetPlayerCurrentReferralRequest.playerId = CreatorIdRef;
@@ -244,7 +237,7 @@ public class NexusUnitySDKRuntimeTests
 
 		public class GetReferralByCodeTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetReferralByCodeResponse = false; 
+			private bool bGetReferralByCodeResponse = false;
 			public bool IsTestFinished
 			{
 				get { return bGetReferralByCodeResponse; }
@@ -252,10 +245,10 @@ public class NexusUnitySDKRuntimeTests
 
 			void Start()
 			{
-				UnityEngine.Debug.Log("Requesting GetReferralByCode using code: ");
+				UnityEngine.Debug.Log("Requesting GetReferralByCode using code: 9jd7RBR_B2BZ0uWO3_lgv");
 
 				NexusSDK.ReferralsAPI.GetReferralInfoByCodeRequestParams GetReferralInfoByCodeRequest = new NexusSDK.ReferralsAPI.GetReferralInfoByCodeRequestParams();
-				GetReferralInfoByCodeRequest.code = "A1B2C3"; // #TODO use expected successful code
+				GetReferralInfoByCodeRequest.code = "9jd7RBR_B2BZ0uWO3_lgv"; // #TODO use expected successful code
 				GetReferralInfoByCodeRequest.page = 1;
 				GetReferralInfoByCodeRequest.pageSize = 100;
 				StartCoroutine(NexusSDK.ReferralsAPI.StartGetReferralInfoByCodeRequest(GetReferralInfoByCodeRequest, new NexusSDK.ReferralsAPI.GetReferralInfoByCodeResponseCallbacks()
@@ -275,7 +268,7 @@ public class NexusUnitySDKRuntimeTests
 		}
 	}
 
-	public class BountiesAPITests
+	public class C_BountiesAPITests
 	{
 		[UnityTest]
 		public IEnumerator NexusUnitySDK_A_GetBountiesTest()
@@ -284,13 +277,13 @@ public class NexusUnitySDKRuntimeTests
 		}
 
 		[UnityTest]
-		public IEnumerator NexusUnitySDK_A_GetBountyByIdTest()
+		public IEnumerator NexusUnitySDK_B_GetBountyByIdTest()
 		{
 			yield return new MonoBehaviourTest<GetBountyByIdTest>();
 		}
 
 		[UnityTest]
-		public IEnumerator NexusUnitySDK_A_GetBountyProgressByCreatorIdTest()
+		public IEnumerator NexusUnitySDK_C_GetBountyProgressByCreatorIdTest()
 		{
 			yield return new MonoBehaviourTest<GetBountyProgressByCreatorIdTest>();
 		}
@@ -316,6 +309,22 @@ public class NexusUnitySDKRuntimeTests
 					{
 						UnityEngine.Debug.Log("Received successful response");
 						bGetBountiesResponse = true;
+
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
+						Assert.True(SuccessResponse.bounties.Length > 0);
+
+						foreach (NexusSDK.BountyAPI.Bounty bounty in SuccessResponse.bounties)
+						{
+							Assert.True(!String.IsNullOrEmpty(bounty.id));
+							Assert.True(!String.IsNullOrEmpty(bounty.name));
+							Assert.True(!String.IsNullOrEmpty(bounty.description));
+							Assert.True(!String.IsNullOrEmpty(bounty.imageSrc));
+							Assert.True(!String.IsNullOrEmpty(bounty.rewardDescription));
+
+							Assert.True(bounty.limit > 0);
+						}
 					},
 					OnGetBounties400Response = (FailureResponse) =>
 					{
@@ -328,19 +337,65 @@ public class NexusUnitySDKRuntimeTests
 
 		public class GetBountyByIdTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetBountyByIdResponse = true; // #TODO init true as temp
+			private bool bGetBountyByIdResponse = false;
 			public bool IsTestFinished
 			{
 				get { return bGetBountyByIdResponse; }
+			}
+			void Start()
+			{
+				UnityEngine.Debug.Log("Requesting GetBountyById...");
+
+				NexusSDK.BountyAPI.GetBountyRequestParams GetBountyRequest = new NexusSDK.BountyAPI.GetBountyRequestParams();
+				GetBountyRequest.groupId = "CTyLYzlOC0VPsWAhk949n"; // #TODO use group id ref
+				GetBountyRequest.includeProgress = false;
+				GetBountyRequest.page = 1;
+				GetBountyRequest.pageSize = 100;
+				StartCoroutine(NexusSDK.BountyAPI.StartGetBountyRequest(GetBountyRequest, new NexusSDK.BountyAPI.GetBountyResponseCallbacks()
+				{
+					OnGetBounty200Response = (SuccessResponse) =>
+					{
+						UnityEngine.Debug.Log("Received successful response");
+						bGetBountyByIdResponse = true;
+					},
+					OnGetBounty400Response = (FailureResponse) =>
+					{
+						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "' and message: '" + FailureResponse.message + "'");
+						bGetBountyByIdResponse = true;
+					}
+				}));
 			}
 		}
 
 		public class GetBountyProgressByCreatorIdTest : MonoBehaviour, IMonoBehaviourTest
 		{
-			private bool bGetBountyProgressByCreatorIdResponse = true; // #TODO init true as temp
+			private bool bGetBountyProgressByCreatorIdResponse = false;
 			public bool IsTestFinished
 			{
 				get { return bGetBountyProgressByCreatorIdResponse; }
+			}
+
+			void Start()
+			{
+				UnityEngine.Debug.Log("Requesting BountyProgressByCreatorId... using CreatorId: " + CreatorIdRef + "...");
+
+				NexusSDK.BountyAPI.GetCreatorBountiesByIDRequestParams CreatorBountiesByIDRequest = new NexusSDK.BountyAPI.GetCreatorBountiesByIDRequestParams();
+				CreatorBountiesByIDRequest.creatorId = CreatorIdRef;
+				CreatorBountiesByIDRequest.page = 1;
+				CreatorBountiesByIDRequest.pageSize = 100;
+				StartCoroutine(NexusSDK.BountyAPI.StartGetCreatorBountiesByIDRequest(CreatorBountiesByIDRequest, new NexusSDK.BountyAPI.GetCreatorBountiesByIDResponseCallbacks()
+				{
+					OnGetCreatorBountiesByID200Response = (SuccessResponse) =>
+					{
+						UnityEngine.Debug.Log("Received successful response");
+						bGetBountyProgressByCreatorIdResponse = true;
+					},
+					OnGetCreatorBountiesByID400Response = (FailureResponse) =>
+					{
+						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "' and message: '" + FailureResponse.message + "'");
+						bGetBountyProgressByCreatorIdResponse = true;
+					}
+				}));
 			}
 		}
 	}
