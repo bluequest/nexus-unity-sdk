@@ -193,6 +193,28 @@ public class NexusUnitySDKRuntimeTests
 				{
 					OnGetReferralInfoByPlayerId200Response = (SuccessResponse) =>
 					{
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
+
+						foreach (NexusSDK.ReferralsAPI.ReferralCodeResponse referralCode in SuccessResponse.referralCodes)
+						{
+							Assert.True(!String.IsNullOrEmpty(referralCode.code));
+						}
+
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.playerId));
+						Assert.True(SuccessResponse.currentPage > 0);
+						Assert.True(SuccessResponse.currentPageSize > 0);
+						Assert.True(SuccessResponse.totalCount > 0);
+
+						foreach (NexusSDK.ReferralsAPI.Referral referral in SuccessResponse.referrals)
+						{
+							Assert.True(!String.IsNullOrEmpty(referral.id));
+							Assert.True(!String.IsNullOrEmpty(referral.code));
+							Assert.True(!String.IsNullOrEmpty(referral.playerId));
+							Assert.True(!String.IsNullOrEmpty(referral.playerName));
+							Assert.True(!String.IsNullOrEmpty(referral.referralDate.ToString()));
+						}
+
 						UnityEngine.Debug.Log("Received successful response");
 						bGetReferralByPlayerIDResponse = true;
 					},
@@ -224,6 +246,8 @@ public class NexusUnitySDKRuntimeTests
 					OnGetPlayerCurrentReferral200Response = (SuccessResponse) =>
 					{
 						UnityEngine.Debug.Log("Received successful response");
+						// test referral code				
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse)); 		
 						bGetReferralCodeForPlayerResponse = true;
 					},
 					OnGetPlayerCurrentReferral404Response = (FailureResponse) =>
@@ -256,6 +280,29 @@ public class NexusUnitySDKRuntimeTests
 					OnGetReferralInfoByCode200Response = (SuccessResponse) =>
 					{
 						UnityEngine.Debug.Log("Received successful response");
+
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
+
+						foreach (NexusSDK.ReferralsAPI.ReferralCodeResponse referralCode in SuccessResponse.referralCodes)
+						{
+							Assert.True(!String.IsNullOrEmpty(referralCode.code));
+						}
+
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.playerId));
+						Assert.True(SuccessResponse.currentPage > 0);
+						Assert.True(SuccessResponse.currentPageSize > 0);
+						Assert.True(SuccessResponse.totalCount > 0);
+
+						foreach (NexusSDK.ReferralsAPI.Referral referral in SuccessResponse.referrals)
+						{
+							Assert.True(!String.IsNullOrEmpty(referral.id));
+							Assert.True(!String.IsNullOrEmpty(referral.code));
+							Assert.True(!String.IsNullOrEmpty(referral.playerId));
+							Assert.True(!String.IsNullOrEmpty(referral.playerName));
+							Assert.True(!String.IsNullOrEmpty(referral.referralDate.ToString()));
+						}
+
 						bGetReferralByCodeResponse = true;
 					},
 					OnGetReferralInfoByCode400Response = (FailureResponse) =>
@@ -308,7 +355,6 @@ public class NexusUnitySDKRuntimeTests
 					OnGetBounties200Response = (SuccessResponse) =>
 					{
 						UnityEngine.Debug.Log("Received successful response");
-						bGetBountiesResponse = true;
 
 						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
 						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
@@ -322,10 +368,68 @@ public class NexusUnitySDKRuntimeTests
 							Assert.True(!String.IsNullOrEmpty(bounty.description));
 							Assert.True(!String.IsNullOrEmpty(bounty.imageSrc));
 							Assert.True(!String.IsNullOrEmpty(bounty.rewardDescription));
-
 							Assert.True(bounty.limit > 0);
+							Assert.True(!String.IsNullOrEmpty(bounty.startsAt.ToString()));
+							Assert.True(!String.IsNullOrEmpty(bounty.endsAt.ToString()));
+							Assert.True(!String.IsNullOrEmpty(bounty.lastProgressCheck.ToString()));
+
+							foreach (NexusSDK.BountyAPI.BountyObjective bountyObjective in bounty.objectives)
+							{
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.id));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.name));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.type));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.condition));
+								Assert.True(bountyObjective.count > 0);
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.eventType));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType));
+
+								foreach (NexusSDK.BountyAPI.BountyObjective.skus_Struct_Element sku in bountyObjective.skus)
+								{
+									Assert.True(!String.IsNullOrEmpty(sku.id));
+									Assert.True(!String.IsNullOrEmpty(sku.name));
+									Assert.True(!String.IsNullOrEmpty(sku.slug));
+								}
+
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.category.id));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.category.name));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.category.slug));
+
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.id));
+								Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.name));
+							}
+
+							foreach (NexusSDK.BountyAPI.BountyReward reward in bounty.rewards)
+							{
+								Assert.True(!String.IsNullOrEmpty(reward.id));
+								Assert.True(!String.IsNullOrEmpty(reward.name));
+								Assert.True(!String.IsNullOrEmpty(reward.type));
+
+								Assert.True(!String.IsNullOrEmpty(reward.sku.id));
+								Assert.True(!String.IsNullOrEmpty(reward.sku.name));
+								Assert.True(!String.IsNullOrEmpty(reward.sku.slug));
+
+								Assert.True(reward.amount > 0);
+								Assert.True(!String.IsNullOrEmpty(reward.currency));
+								Assert.True(!String.IsNullOrEmpty(reward.externalId));
+							}
+
+							foreach (NexusSDK.BountyAPI.Bounty.dependants_Struct_Element dependant in bounty.dependants)
+							{
+								Assert.True(!String.IsNullOrEmpty(dependant.id));
+								Assert.True(!String.IsNullOrEmpty(dependant.name));
+							}
+
+							foreach (NexusSDK.BountyAPI.Bounty.prerequisites_Struct_Element prerequisite in bounty.prerequisites)
+							{
+								Assert.True(!String.IsNullOrEmpty(prerequisite.id));
+								Assert.True(!String.IsNullOrEmpty(prerequisite.name));
+							}
 						}
+
+						bGetBountiesResponse = true;
 					},
+
 					OnGetBounties400Response = (FailureResponse) =>
 					{
 						UnityEngine.Debug.Log("Received failed response with code: '" + FailureResponse.code + "' and message: '" + FailureResponse.message + "'");
@@ -356,6 +460,103 @@ public class NexusUnitySDKRuntimeTests
 					OnGetBounty200Response = (SuccessResponse) =>
 					{
 						UnityEngine.Debug.Log("Received successful response");
+
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
+
+						// bounty 
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.id));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.name));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.description));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.imageSrc));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.rewardDescription));
+						Assert.True(SuccessResponse.bounty.limit > 0);
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.startsAt.ToString()));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.endsAt.ToString()));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.bounty.lastProgressCheck.ToString()));
+						foreach (NexusSDK.BountyAPI.BountyObjective bountyObjective in SuccessResponse.bounty.objectives)
+						{
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.id));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.name));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.type));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.condition));
+							Assert.True(bountyObjective.count > 0);
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.eventType));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType));
+
+							foreach (NexusSDK.BountyAPI.BountyObjective.skus_Struct_Element sku in bountyObjective.skus)
+							{
+								Assert.True(!String.IsNullOrEmpty(sku.id));
+								Assert.True(!String.IsNullOrEmpty(sku.name));
+								Assert.True(!String.IsNullOrEmpty(sku.slug));
+							}
+
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.category.id));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.category.name));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.category.slug));
+
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.id));
+							Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.name));
+						}
+						foreach (NexusSDK.BountyAPI.BountyReward reward in SuccessResponse.bounty.rewards)
+						{
+							Assert.True(!String.IsNullOrEmpty(reward.id));
+							Assert.True(!String.IsNullOrEmpty(reward.name));
+							Assert.True(!String.IsNullOrEmpty(reward.type));
+
+							Assert.True(!String.IsNullOrEmpty(reward.sku.id));
+							Assert.True(!String.IsNullOrEmpty(reward.sku.name));
+							Assert.True(!String.IsNullOrEmpty(reward.sku.slug));
+
+							Assert.True(reward.amount > 0);
+							Assert.True(!String.IsNullOrEmpty(reward.currency));
+							Assert.True(!String.IsNullOrEmpty(reward.externalId));
+						}
+						foreach (NexusSDK.BountyAPI.Bounty.dependants_Struct_Element dependant in SuccessResponse.bounty.dependants)
+						{
+							Assert.True(!String.IsNullOrEmpty(dependant.id));
+							Assert.True(!String.IsNullOrEmpty(dependant.name));
+						}
+						foreach (NexusSDK.BountyAPI.Bounty.prerequisites_Struct_Element prerequisite in SuccessResponse.bounty.prerequisites)
+						{
+							Assert.True(!String.IsNullOrEmpty(prerequisite.id));
+							Assert.True(!String.IsNullOrEmpty(prerequisite.name));
+						}
+						// end bounty
+
+						Assert.True(SuccessResponse.progress.currentPage > 0);
+						Assert.True(SuccessResponse.progress.currentPageSize > 0);
+						Assert.True(SuccessResponse.progress.totalCount > 0);
+
+						foreach (NexusSDK.BountyAPI.GetBounty200Response.progress_Struct.data_Struct_Element dataElement in SuccessResponse.progress.data)
+						{
+							Assert.True(!String.IsNullOrEmpty(dataElement.PROP_BountyProgress.id));
+							Assert.True(dataElement.PROP_BountyProgress.completionCount > -1);
+							Assert.True(!String.IsNullOrEmpty(dataElement.PROP_BountyProgress.lastProgressCheck.ToString()));
+							Assert.True(!String.IsNullOrEmpty(dataElement.PROP_BountyProgress.currentObjectiveGroupId));
+
+							foreach (NexusSDK.BountyAPI.BountyObjectiveProgress currentObjective in dataElement.PROP_BountyProgress.currentObjectives)
+							{
+								Assert.True(!String.IsNullOrEmpty(currentObjective.id));
+								Assert.True(currentObjective.count > -1);
+
+								Assert.True(!String.IsNullOrEmpty(currentObjective.objective.id));
+								Assert.True(!String.IsNullOrEmpty(currentObjective.objective.name));
+								Assert.True(currentObjective.objective.count > -1);
+								Assert.True(!String.IsNullOrEmpty(currentObjective.objective.condition));
+							}
+
+							Assert.True(!String.IsNullOrEmpty(dataElement.PROP_Item1.creator.id));
+							Assert.True(!String.IsNullOrEmpty(dataElement.PROP_Item1.creator.playerId));
+							Assert.True(!String.IsNullOrEmpty(dataElement.PROP_Item1.creator.name));
+
+							foreach (string slug in dataElement.PROP_Item1.creator.slugs)
+							{
+								Assert.True(!String.IsNullOrEmpty(slug));
+							}
+						}
+
 						bGetBountyByIdResponse = true;
 					},
 					OnGetBounty400Response = (FailureResponse) =>
@@ -388,6 +589,59 @@ public class NexusUnitySDKRuntimeTests
 					OnGetCreatorBountiesByID200Response = (SuccessResponse) =>
 					{
 						UnityEngine.Debug.Log("Received successful response");
+
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
+						Assert.True(SuccessResponse.currentPage > 0);
+						Assert.True(SuccessResponse.currentPageSize > 0);
+						Assert.True(SuccessResponse.totalCount > 0);
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.creatorId));
+						Assert.True(!String.IsNullOrEmpty(SuccessResponse.playerId));
+
+						foreach (NexusSDK.BountyAPI.GetCreatorBountiesByID200Response.progress_Struct_Element progressElement in SuccessResponse.progress)
+						{
+							Assert.True(!String.IsNullOrEmpty(progressElement.PROP_BountyProgress.id));
+							Assert.True(progressElement.PROP_BountyProgress.completionCount > -1);
+							Assert.True(!String.IsNullOrEmpty(progressElement.PROP_BountyProgress.lastProgressCheck.ToString()));
+							Assert.True(!String.IsNullOrEmpty(progressElement.PROP_BountyProgress.currentObjectiveGroupId));
+
+							foreach (NexusSDK.BountyAPI.BountyObjectiveProgress currentObjective in progressElement.PROP_BountyProgress.currentObjectives)
+							{
+								Assert.True(!String.IsNullOrEmpty(currentObjective.id));
+								Assert.True(currentObjective.count > -1);
+								Assert.True(!String.IsNullOrEmpty(currentObjective.objective.id));
+								Assert.True(!String.IsNullOrEmpty(currentObjective.objective.name));
+								Assert.True(currentObjective.objective.count > -1);
+								Assert.True(!String.IsNullOrEmpty(currentObjective.objective.condition));
+							}
+							foreach (NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element completedObjective in progressElement.PROP_BountyProgress.completedObjectives)
+							{
+								Assert.True(!String.IsNullOrEmpty(completedObjective.objectiveGroupId));
+
+								foreach (NexusSDK.BountyAPI.BountyObjectiveProgress objective in completedObjective.objectives)
+								{
+									Assert.True(!String.IsNullOrEmpty(objective.id));
+									Assert.True(objective.count > -1);
+									Assert.True(!String.IsNullOrEmpty(objective.objective.id));
+									Assert.True(!String.IsNullOrEmpty(objective.objective.name));
+									Assert.True(objective.objective.count > -1);
+									Assert.True(!String.IsNullOrEmpty(objective.objective.condition));
+								}
+
+								foreach (NexusSDK.BountyAPI.BountyProgressReward reward in completedObjective.rewards)
+								{
+									Assert.True(!String.IsNullOrEmpty(reward.id));
+									Assert.True(!String.IsNullOrEmpty(reward.name));
+									Assert.True(!String.IsNullOrEmpty(reward.externalId));
+									Assert.True(!String.IsNullOrEmpty(reward.rewardReferenceId));
+								}
+							}
+
+							Assert.True(!String.IsNullOrEmpty(progressElement.PROP_Item1.id));
+							Assert.True(!String.IsNullOrEmpty(progressElement.PROP_Item1.name));
+							Assert.True(progressElement.PROP_Item1.limit > -1);
+						}
+
 						bGetBountyProgressByCreatorIdResponse = true;
 					},
 					OnGetCreatorBountiesByID400Response = (FailureResponse) =>
