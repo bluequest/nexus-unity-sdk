@@ -104,7 +104,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/attributions/creators";
+            string uri = "https://api.nexus-dev.gg/v1/attributions/creators";
             List<string> parameterStrings = new List<string>{};
             parameterStrings.Add("page=" + RequestParams.page);
             parameterStrings.Add("pageSize=" + RequestParams.pageSize);
@@ -143,20 +143,23 @@ namespace NexusSDK
 
         public struct GetCreatorByUuid200Response
         {
-            public struct Item0
-            {
-                public NexusSDK.AttributionAPI.CreatorGroup[] groups { get; set; }
-            }
+            public NexusSDK.AttributionAPI.CreatorGroup[] groups { get; set; }
 
-            public NexusSDK.AttributionAPI.GetCreatorByUuid200Response.Item0 PROP_Item0 { get; set; }
+            public string id { get; set; }
 
-            public NexusSDK.AttributionAPI.Creator PROP_Creator { get; set; }
+            public string name { get; set; }
+
+            public string logoImage { get; set; }
+
+            public string nexusUrl { get; set; }
+
+            public string profileImage { get; set; }
         }
 
         public delegate void OnGetCreatorByUuid200ResponseDelegate(NexusSDK.AttributionAPI.GetCreatorByUuid200Response Param0);
         public static IEnumerator StartGetCreatorByUuidRequest(GetCreatorByUuidRequestParams RequestParams, OnGetCreatorByUuid200ResponseDelegate ResponseCallback)
         {
-            string uri = "https://api.nexus.gg/v1/attributions/creators/{creatorSlugOrId}";
+            string uri = "https://api.nexus-dev.gg/v1/attributions/creators/{creatorSlugOrId}";
             uri = uri.Replace("{creatorSlugOrId}", RequestParams.creatorSlugOrId);
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
@@ -182,7 +185,7 @@ namespace NexusSDK
         public delegate void OnGetPing200ResponseDelegate();
         public static IEnumerator StartGetPingRequest(OnGetPing200ResponseDelegate ResponseCallback)
         {
-            string uri = "https://api.nexus.gg/v1/attributions/ping";
+            string uri = "https://api.nexus-dev.gg/v1/attributions/ping";
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
                 webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
