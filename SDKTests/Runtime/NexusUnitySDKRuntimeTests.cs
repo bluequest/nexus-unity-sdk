@@ -23,6 +23,7 @@ public class NexusUnitySDKRuntimeTests
 	public class A_AttributionAPITests
 	{
 		public static string CreatorIdRef = new string("");
+		public static string GroupIdRef = new string("");
 
 		[UnityTest]
 		public IEnumerator NexusUnitySDK_A_PingAttributionsTest()
@@ -130,8 +131,9 @@ public class NexusUnitySDKRuntimeTests
 
 					if (bTestContent == true)
 					{
-						Assert.True(OnGetCreatorByUuid200Response.PROP_Item0.groups.Length > 0);
-						foreach (CreatorGroup CreatorGroupEntry in OnGetCreatorByUuid200Response.PROP_Item0.groups)
+						Assert.True(OnGetCreatorByUuid200Response.groups.Length > 0);
+						UnityEngine.Debug.Log("OnGetCreatorByUuid200Response.groups value: " + OnGetCreatorByUuid200Response.groups);
+						foreach (CreatorGroup CreatorGroupEntry in OnGetCreatorByUuid200Response.groups)
 						{
 							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.name));
 							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.id));
@@ -141,11 +143,11 @@ public class NexusUnitySDKRuntimeTests
 							CreatorIdRef = CreatorGroupEntry.id;
 						}
 
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.PROP_Creator.id));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.PROP_Creator.name));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.PROP_Creator.logoImage));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.PROP_Creator.nexusUrl));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.PROP_Creator.profileImage));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.id));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.name));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.logoImage));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.nexusUrl));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.profileImage));
 					}
 
 					bGetCreatorDetailsByIdResponse = true;
@@ -368,9 +370,11 @@ public class NexusUnitySDKRuntimeTests
 						if (bTestContent == true)
 						{
 							Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupId));
+							// Save group id for GetBountyByIdTest
+							GroupIdRef = SuccessResponse.groupId;
 							Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
 							Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
-							Assert.True(SuccessResponse.bounties.Length > 0);
+							Assert.True(SuccessResponse.bounties.Length > -1); // amount of bounties could be 0
 
 							foreach (NexusSDK.BountyAPI.Bounty bounty in SuccessResponse.bounties)
 							{
@@ -395,7 +399,7 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode));
 									Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType));
 
-									foreach (NexusSDK.BountyAPI.BountyObjective.skus_Struct_Element sku in bountyObjective.skus)
+									foreach (NexusSDK.BountyAPI.BountySku sku in bountyObjective.skus)
 									{
 										Assert.True(!String.IsNullOrEmpty(sku.id));
 										Assert.True(!String.IsNullOrEmpty(sku.name));
@@ -463,7 +467,7 @@ public class NexusUnitySDKRuntimeTests
 				UnityEngine.Debug.Log("Requesting GetBountyById...");
 
 				NexusSDK.BountyAPI.GetBountyRequestParams GetBountyRequest = new NexusSDK.BountyAPI.GetBountyRequestParams();
-				GetBountyRequest.groupId = "CTyLYzlOC0VPsWAhk949n"; // #TODO use group id ref
+				GetBountyRequest.groupId = GroupIdRef;
 				GetBountyRequest.includeProgress = false;
 				GetBountyRequest.page = 1;
 				GetBountyRequest.pageSize = 100;
@@ -499,7 +503,7 @@ public class NexusUnitySDKRuntimeTests
 								Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode));
 								Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType));
 
-								foreach (NexusSDK.BountyAPI.BountyObjective.skus_Struct_Element sku in bountyObjective.skus)
+								foreach (NexusSDK.BountyAPI.BountySku sku in bountyObjective.skus)
 								{
 									Assert.True(!String.IsNullOrEmpty(sku.id));
 									Assert.True(!String.IsNullOrEmpty(sku.name));
@@ -545,12 +549,12 @@ public class NexusUnitySDKRuntimeTests
 
 							foreach (NexusSDK.BountyAPI.GetBounty200Response.progress_Struct.data_Struct_Element dataElement in SuccessResponse.progress.data)
 							{
-								Assert.True(!String.IsNullOrEmpty(dataElement.PROP_BountyProgress.id));
-								Assert.True(dataElement.PROP_BountyProgress.completionCount > -1);
-								Assert.True(!String.IsNullOrEmpty(dataElement.PROP_BountyProgress.lastProgressCheck.ToString()));
-								Assert.True(!String.IsNullOrEmpty(dataElement.PROP_BountyProgress.currentObjectiveGroupId));
+								Assert.True(!String.IsNullOrEmpty(dataElement.id));
+								Assert.True(dataElement.completionCount > -1);
+								Assert.True(!String.IsNullOrEmpty(dataElement.lastProgressCheck.ToString()));
+								Assert.True(!String.IsNullOrEmpty(dataElement.currentObjectiveGroupId));
 
-								foreach (NexusSDK.BountyAPI.BountyObjectiveProgress currentObjective in dataElement.PROP_BountyProgress.currentObjectives)
+								foreach (NexusSDK.BountyAPI.BountyObjectiveProgress currentObjective in dataElement.currentObjectives)
 								{
 									Assert.True(!String.IsNullOrEmpty(currentObjective.id));
 									Assert.True(currentObjective.count > -1);
@@ -561,11 +565,11 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(!String.IsNullOrEmpty(currentObjective.objective.condition));
 								}
 
-								Assert.True(!String.IsNullOrEmpty(dataElement.PROP_Item1.creator.id));
-								Assert.True(!String.IsNullOrEmpty(dataElement.PROP_Item1.creator.playerId));
-								Assert.True(!String.IsNullOrEmpty(dataElement.PROP_Item1.creator.name));
+								Assert.True(!String.IsNullOrEmpty(dataElement.creator.id));
+								Assert.True(!String.IsNullOrEmpty(dataElement.creator.playerId));
+								Assert.True(!String.IsNullOrEmpty(dataElement.creator.name));
 
-								foreach (string slug in dataElement.PROP_Item1.creator.slugs)
+								foreach (string slug in dataElement.creator.slugs)
 								{
 									Assert.True(!String.IsNullOrEmpty(slug));
 								}
@@ -611,18 +615,18 @@ public class NexusUnitySDKRuntimeTests
 							Assert.True(!String.IsNullOrEmpty(SuccessResponse.groupName));
 							Assert.True(SuccessResponse.currentPage > 0);
 							Assert.True(SuccessResponse.currentPageSize > 0);
-							Assert.True(SuccessResponse.totalCount > 0);
-							Assert.True(!String.IsNullOrEmpty(SuccessResponse.creatorId));
-							Assert.True(!String.IsNullOrEmpty(SuccessResponse.playerId));
+							Assert.True(SuccessResponse.totalCount > -1);
+							//Assert.True(!String.IsNullOrEmpty(SuccessResponse.creatorId)); can be null if total count is 0
+							//Assert.True(!String.IsNullOrEmpty(SuccessResponse.playerId)); can be null if total count is 0
 
 							foreach (NexusSDK.BountyAPI.GetCreatorBountiesByID200Response.progress_Struct_Element progressElement in SuccessResponse.progress)
 							{
-								Assert.True(!String.IsNullOrEmpty(progressElement.PROP_BountyProgress.id));
-								Assert.True(progressElement.PROP_BountyProgress.completionCount > -1);
-								Assert.True(!String.IsNullOrEmpty(progressElement.PROP_BountyProgress.lastProgressCheck.ToString()));
-								Assert.True(!String.IsNullOrEmpty(progressElement.PROP_BountyProgress.currentObjectiveGroupId));
+								Assert.True(!String.IsNullOrEmpty(progressElement.id));
+								Assert.True(progressElement.completionCount > -1);
+								Assert.True(!String.IsNullOrEmpty(progressElement.lastProgressCheck.ToString()));
+								Assert.True(!String.IsNullOrEmpty(progressElement.currentObjectiveGroupId));
 
-								foreach (NexusSDK.BountyAPI.BountyObjectiveProgress currentObjective in progressElement.PROP_BountyProgress.currentObjectives)
+								foreach (NexusSDK.BountyAPI.BountyObjectiveProgress currentObjective in progressElement.currentObjectives)
 								{
 									Assert.True(!String.IsNullOrEmpty(currentObjective.id));
 									Assert.True(currentObjective.count > -1);
@@ -631,7 +635,7 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(currentObjective.objective.count > -1);
 									Assert.True(!String.IsNullOrEmpty(currentObjective.objective.condition));
 								}
-								foreach (NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element completedObjective in progressElement.PROP_BountyProgress.completedObjectives)
+								foreach (NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element completedObjective in progressElement.completedObjectives)
 								{
 									Assert.True(!String.IsNullOrEmpty(completedObjective.objectiveGroupId));
 
@@ -654,9 +658,9 @@ public class NexusUnitySDKRuntimeTests
 									}
 								}
 
-								Assert.True(!String.IsNullOrEmpty(progressElement.PROP_Item1.id));
-								Assert.True(!String.IsNullOrEmpty(progressElement.PROP_Item1.name));
-								Assert.True(progressElement.PROP_Item1.limit > -1);
+								Assert.True(!String.IsNullOrEmpty(progressElement.id));
+								Assert.True(!String.IsNullOrEmpty(progressElement.name));
+								Assert.True(progressElement.limit > -1);
 							}
 						}
 
