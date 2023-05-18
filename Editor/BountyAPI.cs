@@ -59,6 +59,15 @@ namespace NexusSDK
             public NexusSDK.BountyAPI.Bounty.prerequisites_Struct_Element[] prerequisites { get; set; }
         }
 
+        public struct BountySku
+        {
+            public string id { get; set; }
+
+            public string name { get; set; }
+
+            public string slug { get; set; }
+        }
+
         public struct BountyObjective
         {
             public string id { get; set; }
@@ -77,16 +86,7 @@ namespace NexusSDK
 
             public string nexusPurchaseObjectiveType { get; set; }
 
-            public struct skus_Struct_Element
-            {
-                public string id { get; set; }
-
-                public string name { get; set; }
-
-                public string slug { get; set; }
-            }
-
-            public NexusSDK.BountyAPI.BountyObjective.skus_Struct_Element[] skus { get; set; }
+            public NexusSDK.BountyAPI.BountySku[] skus { get; set; }
 
             public struct category_Struct
             {
@@ -117,16 +117,7 @@ namespace NexusSDK
 
             public string type { get; set; }
 
-            public struct sku_Struct
-            {
-                public string id { get; set; }
-
-                public string name { get; set; }
-
-                public string slug { get; set; }
-            }
-
-            public NexusSDK.BountyAPI.BountyReward.sku_Struct sku { get; set; }
+            public NexusSDK.BountyAPI.BountySku sku { get; set; }
 
             public double amount { get; set; }
 
@@ -521,14 +512,30 @@ namespace NexusSDK
 
                 public struct data_Struct_Element
                 {
-                    public NexusSDK.BountyAPI.BountyProgress PROP_BountyProgress { get; set; }
+                    public string id { get; set; }
 
-                    public struct Item1
+                    public bool completed { get; set; }
+
+                    public double completionCount { get; set; }
+
+                    public DateTime lastProgressCheck { get; set; }
+
+                    public string currentObjectiveGroupId { get; set; }
+
+                    public NexusSDK.BountyAPI.BountyObjectiveProgress[] currentObjectives { get; set; }
+
+                    public struct completedObjectives_Struct_Element
                     {
-                        public NexusSDK.BountyAPI.Creator creator { get; set; }
+                        public string objectiveGroupId { get; set; }
+
+                        public NexusSDK.BountyAPI.BountyObjectiveProgress[] objectives { get; set; }
+
+                        public NexusSDK.BountyAPI.BountyProgressReward[] rewards { get; set; }
                     }
 
-                    public NexusSDK.BountyAPI.GetBounty200Response.progress_Struct.data_Struct_Element.Item1 PROP_Item1 { get; set; }
+                    public NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element[] completedObjectives { get; set; }
+
+                    public NexusSDK.BountyAPI.Creator creator { get; set; }
                 }
 
                 public NexusSDK.BountyAPI.GetBounty200Response.progress_Struct.data_Struct_Element[] data { get; set; }
@@ -639,18 +646,32 @@ namespace NexusSDK
 
             public struct progress_Struct_Element
             {
-                public NexusSDK.BountyAPI.BountyProgress PROP_BountyProgress { get; set; }
+                public string id { get; set; }
 
-                public struct Item1
+                public bool completed { get; set; }
+
+                public double completionCount { get; set; }
+
+                public DateTime lastProgressCheck { get; set; }
+
+                public string currentObjectiveGroupId { get; set; }
+
+                public NexusSDK.BountyAPI.BountyObjectiveProgress[] currentObjectives { get; set; }
+
+                public struct completedObjectives_Struct_Element
                 {
-                    public string id { get; set; }
+                    public string objectiveGroupId { get; set; }
 
-                    public string name { get; set; }
+                    public NexusSDK.BountyAPI.BountyObjectiveProgress[] objectives { get; set; }
 
-                    public double limit { get; set; }
+                    public NexusSDK.BountyAPI.BountyProgressReward[] rewards { get; set; }
                 }
 
-                public NexusSDK.BountyAPI.GetCreatorBountiesByID200Response.progress_Struct_Element.Item1 PROP_Item1 { get; set; }
+                public NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element[] completedObjectives { get; set; }
+
+                public string name { get; set; }
+
+                public double limit { get; set; }
             }
 
             public NexusSDK.BountyAPI.GetCreatorBountiesByID200Response.progress_Struct_Element[] progress { get; set; }

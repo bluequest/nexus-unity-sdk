@@ -143,14 +143,17 @@ namespace NexusSDK
 
         public struct GetCreatorByUuid200Response
         {
-            public struct Item0
-            {
-                public NexusSDK.AttributionAPI.CreatorGroup[] groups { get; set; }
-            }
+            public NexusSDK.AttributionAPI.CreatorGroup[] groups { get; set; }
 
-            public NexusSDK.AttributionAPI.GetCreatorByUuid200Response.Item0 PROP_Item0 { get; set; }
+            public string id { get; set; }
 
-            public NexusSDK.AttributionAPI.Creator PROP_Creator { get; set; }
+            public string name { get; set; }
+
+            public string logoImage { get; set; }
+
+            public string nexusUrl { get; set; }
+
+            public string profileImage { get; set; }
         }
 
         public delegate void OnGetCreatorByUuid200ResponseDelegate(NexusSDK.AttributionAPI.GetCreatorByUuid200Response Param0);
