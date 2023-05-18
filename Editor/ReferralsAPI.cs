@@ -110,7 +110,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/referrals/player/{playerId}";
+            string uri = "https://api.nexus-dev.gg/v1/referrals/player/{playerId}";
             uri = uri.Replace("{playerId}", RequestParams.playerId);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
@@ -175,7 +175,7 @@ namespace NexusSDK
 
         public static IEnumerator StartGetPlayerCurrentReferralRequest(GetPlayerCurrentReferralRequestParams RequestParams, GetPlayerCurrentReferralResponseCallbacks ResponseCallback)
         {
-            string uri = "https://api.nexus.gg/v1/referrals/player/{playerId}/code";
+            string uri = "https://api.nexus-dev.gg/v1/referrals/player/{playerId}/code";
             uri = uri.Replace("{playerId}", RequestParams.playerId);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
@@ -277,7 +277,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/referrals/code/{code}";
+            string uri = "https://api.nexus-dev.gg/v1/referrals/code/{code}";
             uri = uri.Replace("{code}", RequestParams.code);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")

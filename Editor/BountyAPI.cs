@@ -441,7 +441,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/bounties/";
+            string uri = "https://api.nexus-dev.gg/v1/bounties/";
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
             {
@@ -575,7 +575,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/bounties/{bountyId}";
+            string uri = "https://api.nexus-dev.gg/v1/bounties/{bountyId}";
             uri = uri.Replace("{bountyId}", RequestParams.bountyId);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
@@ -708,7 +708,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/bounties/creator/id/{creatorId}";
+            string uri = "https://api.nexus-dev.gg/v1/bounties/creator/id/{creatorId}";
             uri = uri.Replace("{creatorId}", RequestParams.creatorId);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")

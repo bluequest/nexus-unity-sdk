@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class APIKeyContainer
 {
-    public static string APIKey = "nexus_pk_7784c3faa6e94c1fad8aceab27ab31e6";
+    public static string APIKey = "nexus_pk_50d37b5070464aa78c0f90fc91c7a638";
 }
