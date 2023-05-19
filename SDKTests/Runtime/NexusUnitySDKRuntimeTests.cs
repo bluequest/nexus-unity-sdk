@@ -19,11 +19,13 @@ public class NexusUnitySDKRuntimeTests
 	 * Use the bTestContent flag to test validity of the content retrieved from a successful response.
 	 * If set to false, only test if a response has been received using the respective SDK call.
 	 */
-	static bool bTestContent = false;
+	static bool bTestContent = true;
 	public class A_AttributionAPITests
 	{
 		public static string CreatorIdRef = new string("");
 		public static string GroupIdRef = new string("");
+		public static string BountyIdRef = new string("");
+		public static string ReferralCodeRef = new string("ABCD1234");
 
 		[UnityTest]
 		public IEnumerator NexusUnitySDK_A_PingAttributionsTest()
@@ -256,6 +258,9 @@ public class NexusUnitySDKRuntimeTests
 							Assert.True(!String.IsNullOrEmpty(SuccessResponse));
 						}
 
+						// Save this value later for GetReferralByCodeTest
+						ReferralCodeRef = SuccessResponse;
+
 						bGetReferralCodeForPlayerResponse = true;
 					},
 					OnGetPlayerCurrentReferral404Response = (FailureResponse) =>
@@ -280,7 +285,7 @@ public class NexusUnitySDKRuntimeTests
 				UnityEngine.Debug.Log("Requesting GetReferralByCode using code: 9jd7RBR_B2BZ0uWO3_lgv");
 
 				NexusSDK.ReferralsAPI.GetReferralInfoByCodeRequestParams GetReferralInfoByCodeRequest = new NexusSDK.ReferralsAPI.GetReferralInfoByCodeRequestParams();
-				GetReferralInfoByCodeRequest.code = "9jd7RBR_B2BZ0uWO3_lgv"; // #TODO use expected successful code
+				GetReferralInfoByCodeRequest.code = ReferralCodeRef;
 				GetReferralInfoByCodeRequest.page = 1;
 				GetReferralInfoByCodeRequest.pageSize = 100;
 				StartCoroutine(NexusSDK.ReferralsAPI.StartGetReferralInfoByCodeRequest(GetReferralInfoByCodeRequest, new NexusSDK.ReferralsAPI.GetReferralInfoByCodeResponseCallbacks()
@@ -379,6 +384,8 @@ public class NexusUnitySDKRuntimeTests
 							foreach (NexusSDK.BountyAPI.Bounty bounty in SuccessResponse.bounties)
 							{
 								Assert.True(!String.IsNullOrEmpty(bounty.id));
+								// Save bounty id for GetBountyByIdTest
+								BountyIdRef = bounty.id;
 								Assert.True(!String.IsNullOrEmpty(bounty.name));
 								Assert.True(!String.IsNullOrEmpty(bounty.description));
 								Assert.True(!String.IsNullOrEmpty(bounty.imageSrc));
@@ -395,9 +402,9 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(!String.IsNullOrEmpty(bountyObjective.type));
 									Assert.True(!String.IsNullOrEmpty(bountyObjective.condition));
 									Assert.True(bountyObjective.count > 0);
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.eventType));
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode));
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType));
+									//Assert.True(!String.IsNullOrEmpty(bountyObjective.eventType)); //shouldn't be required (null in sample response data)
+									//Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode)); //shouldn't be required (null in sample response data)
+									//Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType)); //shouldn't be required (null in sample response data)
 
 									foreach (NexusSDK.BountyAPI.BountySku sku in bountyObjective.skus)
 									{
@@ -406,12 +413,14 @@ public class NexusUnitySDKRuntimeTests
 										Assert.True(!String.IsNullOrEmpty(sku.slug));
 									}
 
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.category.id));
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.category.name));
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.category.slug));
+									/*
+									Assert.True(!String.IsNullOrEmpty(bountyObjective.category.id)); //shouldn't be required (type not included in sample response data)
+									Assert.True(!String.IsNullOrEmpty(bountyObjective.category.name)); //shouldn't be required (type not included in sample response data)
+									Assert.True(!String.IsNullOrEmpty(bountyObjective.category.slug)); //shouldn't be required (type not included in sample response data)
 
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.id));
-									Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.name));
+									Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.id)); //shouldn't be required (type not included in sample response data)
+									Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.name)); //shouldn't be required (type not included in sample response data)
+									*/
 								}
 
 								foreach (NexusSDK.BountyAPI.BountyReward reward in bounty.rewards)
@@ -425,8 +434,8 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(!String.IsNullOrEmpty(reward.sku.slug));
 
 									Assert.True(reward.amount > 0);
-									Assert.True(!String.IsNullOrEmpty(reward.currency));
-									Assert.True(!String.IsNullOrEmpty(reward.externalId));
+									//Assert.True(!String.IsNullOrEmpty(reward.currency)); //shouldn't be required
+									//Assert.True(!String.IsNullOrEmpty(reward.externalId)); //shouldn't be required (type not included in sample response data)
 								}
 
 								foreach (NexusSDK.BountyAPI.Bounty.dependants_Struct_Element dependant in bounty.dependants)
@@ -468,6 +477,7 @@ public class NexusUnitySDKRuntimeTests
 
 				NexusSDK.BountyAPI.GetBountyRequestParams GetBountyRequest = new NexusSDK.BountyAPI.GetBountyRequestParams();
 				GetBountyRequest.groupId = GroupIdRef;
+				GetBountyRequest.bountyId = BountyIdRef;
 				GetBountyRequest.includeProgress = false;
 				GetBountyRequest.page = 1;
 				GetBountyRequest.pageSize = 100;
@@ -499,9 +509,9 @@ public class NexusUnitySDKRuntimeTests
 								Assert.True(!String.IsNullOrEmpty(bountyObjective.type));
 								Assert.True(!String.IsNullOrEmpty(bountyObjective.condition));
 								Assert.True(bountyObjective.count > 0);
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.eventType));
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode));
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType));
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.eventType)); //shouldn't be required (null in sample response data)
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.eventCode)); //shouldn't be required (type not included in sample response data)
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.nexusPurchaseObjectiveType)); //shouldn't be required (null in sample response data)
 
 								foreach (NexusSDK.BountyAPI.BountySku sku in bountyObjective.skus)
 								{
@@ -510,12 +520,12 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(!String.IsNullOrEmpty(sku.slug));
 								}
 
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.category.id));
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.category.name));
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.category.slug));
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.category.id)); //shouldn't be required (type not included in sample response data)
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.category.name)); //shouldn't be required (type not included in sample response data)
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.category.slug)); //shouldn't be required (type not included in sample response data)
 
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.id));
-								Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.name));
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.id)); //shouldn't be required (type not included in sample response data)
+								//Assert.True(!String.IsNullOrEmpty(bountyObjective.publisher.name)); //shouldn't be required (type not included in sample response data)
 							}
 							foreach (NexusSDK.BountyAPI.BountyReward reward in SuccessResponse.bounty.rewards)
 							{
@@ -528,8 +538,8 @@ public class NexusUnitySDKRuntimeTests
 								Assert.True(!String.IsNullOrEmpty(reward.sku.slug));
 
 								Assert.True(reward.amount > 0);
-								Assert.True(!String.IsNullOrEmpty(reward.currency));
-								Assert.True(!String.IsNullOrEmpty(reward.externalId));
+								//Assert.True(!String.IsNullOrEmpty(reward.currency)); //shouldn't be required (null in sample response data)
+								//Assert.True(!String.IsNullOrEmpty(reward.externalId)); //shouldn't be required (type not included in sample response data)
 							}
 							foreach (NexusSDK.BountyAPI.Bounty.dependants_Struct_Element dependant in SuccessResponse.bounty.dependants)
 							{
@@ -543,6 +553,7 @@ public class NexusUnitySDKRuntimeTests
 							}
 							// end bounty
 
+							/* // Not required for public endpoint. Progress information will only be included when using private key auth
 							Assert.True(SuccessResponse.progress.currentPage > 0);
 							Assert.True(SuccessResponse.progress.currentPageSize > 0);
 							Assert.True(SuccessResponse.progress.totalCount > 0);
@@ -574,6 +585,7 @@ public class NexusUnitySDKRuntimeTests
 									Assert.True(!String.IsNullOrEmpty(slug));
 								}
 							}
+							*/
 						}
 
 						bGetBountyByIdResponse = true;
