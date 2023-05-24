@@ -47,6 +47,7 @@ namespace NexusSDK
             public bool isManaged { get; set; }
         }
 
+        public delegate void ErrorDelegate(long ErrorCode);
         public struct GetReferralInfoByPlayerIdRequestParams
         {
             public string playerId { get; set; }
@@ -88,7 +89,7 @@ namespace NexusSDK
             public OnGetReferralInfoByPlayerId400ResponseDelegate OnGetReferralInfoByPlayerId400Response { get; set; }
         }
 
-        public static IEnumerator StartGetReferralInfoByPlayerIdRequest(GetReferralInfoByPlayerIdRequestParams RequestParams, GetReferralInfoByPlayerIdResponseCallbacks ResponseCallback)
+        public static IEnumerator StartGetReferralInfoByPlayerIdRequest(GetReferralInfoByPlayerIdRequestParams RequestParams, GetReferralInfoByPlayerIdResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -146,7 +147,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
@@ -173,7 +174,7 @@ namespace NexusSDK
             public OnGetPlayerCurrentReferral404ResponseDelegate OnGetPlayerCurrentReferral404Response { get; set; }
         }
 
-        public static IEnumerator StartGetPlayerCurrentReferralRequest(GetPlayerCurrentReferralRequestParams RequestParams, GetPlayerCurrentReferralResponseCallbacks ResponseCallback)
+        public static IEnumerator StartGetPlayerCurrentReferralRequest(GetPlayerCurrentReferralRequestParams RequestParams, GetPlayerCurrentReferralResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             string uri = "https://api.nexus.gg/v1/referrals/player/{playerId}/code";
             uri = uri.Replace("{playerId}", RequestParams.playerId);
@@ -208,7 +209,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
@@ -255,7 +256,7 @@ namespace NexusSDK
             public OnGetReferralInfoByCode400ResponseDelegate OnGetReferralInfoByCode400Response { get; set; }
         }
 
-        public static IEnumerator StartGetReferralInfoByCodeRequest(GetReferralInfoByCodeRequestParams RequestParams, GetReferralInfoByCodeResponseCallbacks ResponseCallback)
+        public static IEnumerator StartGetReferralInfoByCodeRequest(GetReferralInfoByCodeRequestParams RequestParams, GetReferralInfoByCodeResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -313,7 +314,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }

@@ -254,6 +254,7 @@ namespace NexusSDK
             public string status { get; set; }
         }
 
+        public delegate void ErrorDelegate(long ErrorCode);
         public struct GetCreatorsRequestParams
         {
             public int page { get; set; }
@@ -273,7 +274,7 @@ namespace NexusSDK
         }
 
         public delegate void OnGetCreators200ResponseDelegate(NexusSDK.AttributionAPI.GetCreators200Response Param0);
-        public static IEnumerator StartGetCreatorsRequest(GetCreatorsRequestParams RequestParams, OnGetCreators200ResponseDelegate ResponseCallback)
+        public static IEnumerator StartGetCreatorsRequest(GetCreatorsRequestParams RequestParams, OnGetCreators200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -321,7 +322,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
@@ -362,7 +363,7 @@ namespace NexusSDK
         }
 
         public delegate void OnGetCreatorByUuid200ResponseDelegate(NexusSDK.AttributionAPI.GetCreatorByUuid200Response Param0);
-        public static IEnumerator StartGetCreatorByUuidRequest(GetCreatorByUuidRequestParams RequestParams, OnGetCreatorByUuid200ResponseDelegate ResponseCallback)
+        public static IEnumerator StartGetCreatorByUuidRequest(GetCreatorByUuidRequestParams RequestParams, OnGetCreatorByUuid200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
         {
             string uri = "https://api.nexus.gg/v1/attributions/creators/{creatorSlugOrId}";
             uri = uri.Replace("{creatorSlugOrId}", RequestParams.creatorSlugOrId);
@@ -381,14 +382,14 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
         }
 
         public delegate void OnGetPing200ResponseDelegate();
-        public static IEnumerator StartGetPingRequest(OnGetPing200ResponseDelegate ResponseCallback)
+        public static IEnumerator StartGetPingRequest(OnGetPing200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
         {
             string uri = "https://api.nexus.gg/v1/attributions/ping";
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -405,7 +406,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }

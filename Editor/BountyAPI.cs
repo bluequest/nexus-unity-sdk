@@ -386,6 +386,7 @@ namespace NexusSDK
             public string message { get; set; }
         }
 
+        public delegate void ErrorDelegate(long ErrorCode);
         public struct GetBountiesRequestParams
         {
             public string groupId { get; set; }
@@ -419,7 +420,7 @@ namespace NexusSDK
             public OnGetBounties400ResponseDelegate OnGetBounties400Response { get; set; }
         }
 
-        public static IEnumerator StartGetBountiesRequest(GetBountiesRequestParams RequestParams, GetBountiesResponseCallbacks ResponseCallback)
+        public static IEnumerator StartGetBountiesRequest(GetBountiesRequestParams RequestParams, GetBountiesResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -475,7 +476,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
@@ -553,7 +554,7 @@ namespace NexusSDK
             public OnGetBounty400ResponseDelegate OnGetBounty400Response { get; set; }
         }
 
-        public static IEnumerator StartGetBountyRequest(GetBountyRequestParams RequestParams, GetBountyResponseCallbacks ResponseCallback)
+        public static IEnumerator StartGetBountyRequest(GetBountyRequestParams RequestParams, GetBountyResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -611,7 +612,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
@@ -686,7 +687,7 @@ namespace NexusSDK
             public OnGetCreatorBountiesByID400ResponseDelegate OnGetCreatorBountiesByID400Response { get; set; }
         }
 
-        public static IEnumerator StartGetCreatorBountiesByIDRequest(GetCreatorBountiesByIDRequestParams RequestParams, GetCreatorBountiesByIDResponseCallbacks ResponseCallback)
+        public static IEnumerator StartGetCreatorBountiesByIDRequest(GetCreatorBountiesByIDRequestParams RequestParams, GetCreatorBountiesByIDResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -743,7 +744,7 @@ namespace NexusSDK
 
                         break;
                     default:
-                        throw new Exception(); //TODO: Exception on error
+                        ErrorCallback?.Invoke(webRequest.responseCode);
                         break;
                 }
             }
