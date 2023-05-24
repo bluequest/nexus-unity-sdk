@@ -133,23 +133,20 @@ public class NexusUnitySDKRuntimeTests
 
 					if (bTestContent == true)
 					{
-						Assert.True(OnGetCreatorByUuid200Response.groups.Length > 0);
-						UnityEngine.Debug.Log("OnGetCreatorByUuid200Response.groups value: " + OnGetCreatorByUuid200Response.groups);
-						foreach (CreatorGroup CreatorGroupEntry in OnGetCreatorByUuid200Response.groups)
+						Assert.True(OnGetCreatorByUuid200Response.creator.groups.Length > 0);
+						UnityEngine.Debug.Log("OnGetCreatorByUuid200Response.groups value: " + OnGetCreatorByUuid200Response.creator.groups);
+						foreach (NexusSDK.AttributionAPI.GetCreatorByUuid200Response.creator_Struct.groups_Struct_Element CreatorGroupEntry in OnGetCreatorByUuid200Response.creator.groups)
 						{
-							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.name));
-							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.id));
+							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.groupName));
+							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.groupId));
 							Assert.True(!String.IsNullOrEmpty(CreatorGroupEntry.status));
-
-							// Save this ID later so we can use for GetCreatorDetailsByIdTest
-							CreatorIdRef = CreatorGroupEntry.id;
 						}
 
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.id));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.name));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.logoImage));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.nexusUrl));
-						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.profileImage));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.creator.id));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.creator.name));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.creator.logoImage));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.creator.nexusUrl));
+						Assert.True(!String.IsNullOrEmpty(OnGetCreatorByUuid200Response.creator.profileImage));
 					}
 
 					bGetCreatorDetailsByIdResponse = true;
