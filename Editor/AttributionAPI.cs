@@ -16,6 +16,199 @@ namespace NexusSDK
 {
     public static class AttributionAPI
     {
+        public enum Currency
+        {
+            AED,
+            AFN,
+            ALL,
+            AMD,
+            ANG,
+            AOA,
+            ARS,
+            AUD,
+            AWG,
+            AZN,
+            BAM,
+            BBD,
+            BDT,
+            BGN,
+            BHD,
+            BIF,
+            BMD,
+            BND,
+            BOB,
+            BRL,
+            BSD,
+            BTC,
+            BTN,
+            BWP,
+            BYN,
+            BYR,
+            BZD,
+            CAD,
+            CDF,
+            CHF,
+            CLF,
+            CLP,
+            CNY,
+            COP,
+            CRC,
+            CUC,
+            CUP,
+            CVE,
+            CZK,
+            DJF,
+            DKK,
+            DOP,
+            DZD,
+            EGP,
+            ERN,
+            ETB,
+            EUR,
+            FJD,
+            FKP,
+            GBP,
+            GEL,
+            GGP,
+            GHS,
+            GIP,
+            GMD,
+            GNF,
+            GTQ,
+            GYD,
+            HKD,
+            HNL,
+            HRK,
+            HTG,
+            HUF,
+            IDR,
+            ILS,
+            IMP,
+            INR,
+            IQD,
+            IRR,
+            ISK,
+            JEP,
+            JMD,
+            JOD,
+            JPY,
+            KES,
+            KGS,
+            KHR,
+            KMF,
+            KPW,
+            KRW,
+            KWD,
+            KYD,
+            KZT,
+            LAK,
+            LBP,
+            LKR,
+            LRD,
+            LSL,
+            LTL,
+            LVL,
+            LYD,
+            MAD,
+            MDL,
+            MGA,
+            MKD,
+            MMK,
+            MNT,
+            MOP,
+            MRO,
+            MUR,
+            MVR,
+            MWK,
+            MXN,
+            MYR,
+            MZN,
+            NAD,
+            NGN,
+            NIO,
+            NOK,
+            NPR,
+            NZD,
+            OMR,
+            PAB,
+            PEN,
+            PGK,
+            PHP,
+            PKR,
+            PLN,
+            PYG,
+            QAR,
+            RON,
+            RSD,
+            RUB,
+            RWF,
+            SAR,
+            SBD,
+            SCR,
+            SDG,
+            SEK,
+            SGD,
+            SHP,
+            SLL,
+            SOS,
+            SRD,
+            STD,
+            SVC,
+            SYP,
+            SZL,
+            THB,
+            TJS,
+            TMT,
+            TND,
+            TOP,
+            TRY,
+            TTD,
+            TWD,
+            TZS,
+            UAH,
+            UGX,
+            USD,
+            UYU,
+            UZS,
+            VEF,
+            VND,
+            VUV,
+            WST,
+            XAF,
+            XAG,
+            XAU,
+            XCD,
+            XDR,
+            XOF,
+            XPF,
+            YER,
+            ZAR,
+            ZMK,
+            ZMW,
+            ZWL,
+        }
+
+        public struct Metrics
+        {
+            public DateTime joinDate { get; set; }
+
+            public struct conversion_Struct
+            {
+                public DateTime lastPurchaseDate { get; set; }
+
+                public struct totalSpendToDate_Struct
+                {
+                    public double total { get; set; }
+
+                    public string currency { get; set; }
+                }
+
+                public NexusSDK.AttributionAPI.Metrics.conversion_Struct.totalSpendToDate_Struct totalSpendToDate { get; set; }
+            }
+
+            public NexusSDK.AttributionAPI.Metrics.conversion_Struct conversion { get; set; }
+        }
+
         public struct Transaction
         {
             public string creatorId { get; set; }
@@ -34,11 +227,9 @@ namespace NexusSDK
 
             public string playerId { get; set; }
 
-            public DateTime playerLastPurchase { get; set; }
-
-            public DateTime playerJoinDate { get; set; }
-
             public string playerName { get; set; }
+
+            public NexusSDK.AttributionAPI.Metrics metrics { get; set; }
         }
 
         public struct Creator
@@ -143,17 +334,31 @@ namespace NexusSDK
 
         public struct GetCreatorByUuid200Response
         {
-            public NexusSDK.AttributionAPI.CreatorGroup[] groups { get; set; }
+            public struct creator_Struct
+            {
+                public string id { get; set; }
 
-            public string id { get; set; }
+                public string name { get; set; }
 
-            public string name { get; set; }
+                public string logoImage { get; set; }
 
-            public string logoImage { get; set; }
+                public string nexusUrl { get; set; }
 
-            public string nexusUrl { get; set; }
+                public string profileImage { get; set; }
 
-            public string profileImage { get; set; }
+                public struct groups_Struct_Element
+                {
+                    public string groupName { get; set; }
+
+                    public string groupId { get; set; }
+
+                    public string status { get; set; }
+                }
+
+                public NexusSDK.AttributionAPI.GetCreatorByUuid200Response.creator_Struct.groups_Struct_Element[] groups { get; set; }
+            }
+
+            public NexusSDK.AttributionAPI.GetCreatorByUuid200Response.creator_Struct creator { get; set; }
         }
 
         public delegate void OnGetCreatorByUuid200ResponseDelegate(NexusSDK.AttributionAPI.GetCreatorByUuid200Response Param0);
