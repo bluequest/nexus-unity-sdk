@@ -67,9 +67,11 @@ namespace NexusSDK
 
             public string groupName { get; set; }
 
-            public NexusSDK.ReferralsAPI.ReferralCodeResponse[] referralCodes { get; set; }
+            public NexusSDK.ReferralsAPI.ReferralCodeResponse[] codes { get; set; }
 
             public string playerId { get; set; }
+
+            public string memberId { get; set; }
 
             public int currentPage { get; set; }
 
