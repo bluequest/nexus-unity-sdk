@@ -284,7 +284,7 @@ namespace NexusSDK
 
             public string id { get; set; }
 
-            public bool default  { get ; set ; }
+            public bool @default  { get ; set ; }
     }
 
     public struct ScheduledRevShare
