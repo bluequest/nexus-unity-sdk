@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class APIKeyContainer
 {
-    public static string APIKey = "nexus_pk_1234";
+    public static string APIKey => Resources.Load<APIKeyData>("APIKeyData").apiKey;
 }
