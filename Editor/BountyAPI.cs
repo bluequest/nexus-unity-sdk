@@ -150,6 +150,30 @@ namespace NexusSDK
             }
 
             public NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element[] completedObjectives { get; set; }
+
+            public struct member_Struct
+            {
+                public string id { get; set; }
+
+                public string playerId { get; set; }
+
+                public string name { get; set; }
+
+                public NexusSDK.BountyAPI.Code[] codes { get; set; }
+            }
+
+            public NexusSDK.BountyAPI.BountyProgress.member_Struct member { get; set; }
+        }
+
+        public struct Code
+        {
+            public string code { get; set; }
+
+            public bool isPrimary { get; set; }
+
+            public bool isGenerated { get; set; }
+
+            public bool isManaged { get; set; }
         }
 
         public struct BountyObjectiveProgress
@@ -536,6 +560,19 @@ namespace NexusSDK
 
                     public NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element[] completedObjectives { get; set; }
 
+                    public struct member_Struct
+                    {
+                        public string id { get; set; }
+
+                        public string playerId { get; set; }
+
+                        public string name { get; set; }
+
+                        public NexusSDK.BountyAPI.Code[] codes { get; set; }
+                    }
+
+                    public NexusSDK.BountyAPI.BountyProgress.member_Struct member { get; set; }
+
                     public NexusSDK.BountyAPI.Creator creator { get; set; }
                 }
 
@@ -618,7 +655,7 @@ namespace NexusSDK
             }
         }
 
-        public struct GetCreatorBountiesByIDRequestParams
+        public struct GetMemberBountiesByIDRequestParams
         {
             public string groupId { get; set; }
 
@@ -626,10 +663,10 @@ namespace NexusSDK
 
             public int pageSize { get; set; }
 
-            public string creatorId { get; set; }
+            public string memberId { get; set; }
         }
 
-        public struct GetCreatorBountiesByID200Response
+        public struct GetMemberBountiesByID200Response
         {
             public string groupId { get; set; }
 
@@ -641,7 +678,7 @@ namespace NexusSDK
 
             public int totalCount { get; set; }
 
-            public string creatorId { get; set; }
+            public string memberId { get; set; }
 
             public string playerId { get; set; }
 
@@ -670,24 +707,37 @@ namespace NexusSDK
 
                 public NexusSDK.BountyAPI.BountyProgress.completedObjectives_Struct_Element[] completedObjectives { get; set; }
 
+                public struct member_Struct
+                {
+                    public string id { get; set; }
+
+                    public string playerId { get; set; }
+
+                    public string name { get; set; }
+
+                    public NexusSDK.BountyAPI.Code[] codes { get; set; }
+                }
+
+                public NexusSDK.BountyAPI.BountyProgress.member_Struct member { get; set; }
+
                 public string name { get; set; }
 
                 public double limit { get; set; }
             }
 
-            public NexusSDK.BountyAPI.GetCreatorBountiesByID200Response.progress_Struct_Element[] progress { get; set; }
+            public NexusSDK.BountyAPI.GetMemberBountiesByID200Response.progress_Struct_Element[] progress { get; set; }
         }
 
-        public delegate void OnGetCreatorBountiesByID200ResponseDelegate(NexusSDK.BountyAPI.GetCreatorBountiesByID200Response Param0);
-        public delegate void OnGetCreatorBountiesByID400ResponseDelegate(NexusSDK.BountyAPI.BountyError Param0);
-        public struct GetCreatorBountiesByIDResponseCallbacks
+        public delegate void OnGetMemberBountiesByID200ResponseDelegate(NexusSDK.BountyAPI.GetMemberBountiesByID200Response Param0);
+        public delegate void OnGetMemberBountiesByID400ResponseDelegate(NexusSDK.BountyAPI.BountyError Param0);
+        public struct GetMemberBountiesByIDResponseCallbacks
         {
-            public OnGetCreatorBountiesByID200ResponseDelegate OnGetCreatorBountiesByID200Response { get; set; }
+            public OnGetMemberBountiesByID200ResponseDelegate OnGetMemberBountiesByID200Response { get; set; }
 
-            public OnGetCreatorBountiesByID400ResponseDelegate OnGetCreatorBountiesByID400Response { get; set; }
+            public OnGetMemberBountiesByID400ResponseDelegate OnGetMemberBountiesByID400Response { get; set; }
         }
 
-        public static IEnumerator StartGetCreatorBountiesByIDRequest(GetCreatorBountiesByIDRequestParams RequestParams, GetCreatorBountiesByIDResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
+        public static IEnumerator StartGetMemberBountiesByIDRequest(GetMemberBountiesByIDRequestParams RequestParams, GetMemberBountiesByIDResponseCallbacks ResponseCallback, ErrorDelegate ErrorCallback)
         {
             if (RequestParams.page > 9999)
             {
@@ -709,8 +759,8 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/bounties/creator/id/{creatorId}";
-            uri = uri.Replace("{creatorId}", RequestParams.creatorId);
+            string uri = "https://api.nexus.gg/v1/bounties/member/id/{memberId}";
+            uri = uri.Replace("{memberId}", RequestParams.memberId);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
             {
@@ -728,18 +778,18 @@ namespace NexusSDK
                 switch (webRequest.responseCode)
                 {
                     case 200:
-                        if (ResponseCallback.OnGetCreatorBountiesByID200Response != null)
+                        if (ResponseCallback.OnGetMemberBountiesByID200Response != null)
                         {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetCreatorBountiesByID200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
-                            ResponseCallback.OnGetCreatorBountiesByID200Response(callbackData0);
+                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.GetMemberBountiesByID200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
+                            ResponseCallback.OnGetMemberBountiesByID200Response(callbackData0);
                         }
 
                         break;
                     case 400:
-                        if (ResponseCallback.OnGetCreatorBountiesByID400Response != null)
+                        if (ResponseCallback.OnGetMemberBountiesByID400Response != null)
                         {
                             var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.BountyAPI.BountyError>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
-                            ResponseCallback.OnGetCreatorBountiesByID400Response(callbackData0);
+                            ResponseCallback.OnGetMemberBountiesByID400Response(callbackData0);
                         }
 
                         break;

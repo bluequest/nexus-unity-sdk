@@ -16,6 +16,17 @@ namespace NexusSDK
 {
     public static class AttributionAPI
     {
+        public struct Code
+        {
+            public string code { get; set; }
+
+            public bool isPrimary { get; set; }
+
+            public bool isGenerated { get; set; }
+
+            public bool isManaged { get; set; }
+        }
+
         public enum Currency
         {
             AED,
@@ -211,9 +222,13 @@ namespace NexusSDK
 
         public struct Transaction
         {
-            public string creatorId { get; set; }
+            public string id { get; set; }
 
-            public string currency { get; set; }
+            public string memberId { get; set; }
+
+            public string code { get; set; }
+
+            public string memberPlayerId { get; set; }
 
             public string description { get; set; }
 
@@ -221,28 +236,46 @@ namespace NexusSDK
 
             public double subtotal { get; set; }
 
+            public string currency { get; set; }
+
+            public double total { get; set; }
+
+            public string totalCurrency { get; set; }
+
             public string transactionId { get; set; }
 
             public DateTime transactionDate { get; set; }
+
+            public string platform { get; set; }
 
             public string playerId { get; set; }
 
             public string playerName { get; set; }
 
             public NexusSDK.AttributionAPI.Metrics metrics { get; set; }
+
+            public double memberShareAmount { get; set; }
+
+            public double memberSharePercent { get; set; }
+
+            public bool memberPaid { get; set; }
+
+            public string skuId { get; set; }
         }
 
-        public struct Creator
+        public struct Member
         {
             public string id { get; set; }
 
             public string name { get; set; }
 
+            public string playerId { get; set; }
+
             public string logoImage { get; set; }
 
-            public string nexusUrl { get; set; }
-
             public string profileImage { get; set; }
+
+            public NexusSDK.AttributionAPI.Code[] codes { get; set; }
         }
 
         public struct CreatorGroup
@@ -251,165 +284,242 @@ namespace NexusSDK
 
             public string id { get; set; }
 
-            public string status { get; set; }
+            public bool @default  { get ; set ; }
+    }
+
+    public struct ScheduledRevShare
+    {
+        public string id { get; set; }
+
+        public double revShare { get; set; }
+
+        public DateTime startDate { get; set; }
+
+        public DateTime endDate { get; set; }
+
+        public string groupId { get; set; }
+
+        public string groupName { get; set; }
+
+        public NexusSDK.AttributionAPI.TierRevenueShare[] tierRevenueShares { get; set; }
+    }
+
+    public struct CreatorGroupTier
+    {
+        public string id { get; set; }
+
+        public string name { get; set; }
+
+        public double revShare { get; set; }
+
+        public double memberCount { get; set; }
+    }
+
+    public struct TierRevenueShare
+    {
+        public double revShare { get; set; }
+
+        public string tierId { get; set; }
+
+        public string tierName { get; set; }
+    }
+
+    public struct APIError
+    {
+        public string code { get; set; }
+
+        public string message { get; set; }
+    }
+
+    public delegate void ErrorDelegate(long ErrorCode);
+    public struct GetMembersRequestParams
+    {
+        public int page { get; set; }
+
+        public int pageSize { get; set; }
+
+        public string groupId { get; set; }
+    }
+
+    public struct GetMembers200Response
+    {
+        public string groupId { get; set; }
+
+        public string groupName { get; set; }
+
+        public int currentPage { get; set; }
+
+        public int currentPageSize { get; set; }
+
+        public int totalCount { get; set; }
+
+        public NexusSDK.AttributionAPI.Member[] members { get; set; }
+    }
+
+    public delegate void OnGetMembers200ResponseDelegate(NexusSDK.AttributionAPI.GetMembers200Response Param0);
+    public static IEnumerator StartGetMembersRequest(GetMembersRequestParams RequestParams, OnGetMembers200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
+    {
+        if (RequestParams.page > 9999)
+        {
+            yield break;
         }
 
-        public delegate void ErrorDelegate(long ErrorCode);
-        public struct GetCreatorsRequestParams
+        if (RequestParams.page < 1)
         {
-            public int page { get; set; }
-
-            public int pageSize { get; set; }
-
-            public string groupId { get; set; }
+            yield break;
         }
 
-        public struct GetCreators200Response
+        if (RequestParams.pageSize > 100)
         {
-            public int currentPage { get; set; }
-
-            public int currentPageSize { get; set; }
-
-            public NexusSDK.AttributionAPI.Creator[] creators { get; set; }
+            yield break;
         }
 
-        public delegate void OnGetCreators200ResponseDelegate(NexusSDK.AttributionAPI.GetCreators200Response Param0);
-        public static IEnumerator StartGetCreatorsRequest(GetCreatorsRequestParams RequestParams, OnGetCreators200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
+        if (RequestParams.pageSize < 1)
         {
-            if (RequestParams.page > 9999)
-            {
-                yield break;
-            }
-
-            if (RequestParams.page < 1)
-            {
-                yield break;
-            }
-
-            if (RequestParams.pageSize > 100)
-            {
-                yield break;
-            }
-
-            if (RequestParams.pageSize < 1)
-            {
-                yield break;
-            }
-
-            string uri = "https://api.nexus.gg/v1/attributions/creators";
-            List<string> parameterStrings = new List<string>{};
-            parameterStrings.Add("page=" + RequestParams.page);
-            parameterStrings.Add("pageSize=" + RequestParams.pageSize);
-            if (RequestParams.groupId != "")
-            {
-                parameterStrings.Add("groupId=" + RequestParams.groupId);
-            }
-
-            uri += "?";
-            uri += string.Join("&", parameterStrings);
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
-            {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
-                yield return webRequest.SendWebRequest();
-                switch (webRequest.responseCode)
-                {
-                    case 200:
-                        if (ResponseCallback != null)
-                        {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetCreators200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
-                            ResponseCallback?.Invoke(callbackData0);
-                        }
-
-                        break;
-                    default:
-                        ErrorCallback?.Invoke(webRequest.responseCode);
-                        break;
-                }
-            }
+            yield break;
         }
 
-        public struct GetCreatorByUuidRequestParams
+        string uri = "https://api.nexus.gg/v1/manage/members";
+        List<string> parameterStrings = new List<string>{};
+        parameterStrings.Add("page=" + RequestParams.page);
+        parameterStrings.Add("pageSize=" + RequestParams.pageSize);
+        if (RequestParams.groupId != "")
         {
-            public string creatorSlugOrId { get; set; }
+            parameterStrings.Add("groupId=" + RequestParams.groupId);
         }
 
-        public struct GetCreatorByUuid200Response
+        uri += "?";
+        uri += string.Join("&", parameterStrings);
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
-            public struct creator_Struct
+            webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+            yield return webRequest.SendWebRequest();
+            switch (webRequest.responseCode)
             {
-                public string id { get; set; }
+                case 200:
+                    if (ResponseCallback != null)
+                    {
+                        var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetMembers200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
+                        ResponseCallback?.Invoke(callbackData0);
+                    }
 
-                public string name { get; set; }
-
-                public string logoImage { get; set; }
-
-                public string nexusUrl { get; set; }
-
-                public string profileImage { get; set; }
-
-                public struct groups_Struct_Element
-                {
-                    public string groupName { get; set; }
-
-                    public string groupId { get; set; }
-
-                    public string status { get; set; }
-                }
-
-                public NexusSDK.AttributionAPI.GetCreatorByUuid200Response.creator_Struct.groups_Struct_Element[] groups { get; set; }
-            }
-
-            public NexusSDK.AttributionAPI.GetCreatorByUuid200Response.creator_Struct creator { get; set; }
-        }
-
-        public delegate void OnGetCreatorByUuid200ResponseDelegate(NexusSDK.AttributionAPI.GetCreatorByUuid200Response Param0);
-        public static IEnumerator StartGetCreatorByUuidRequest(GetCreatorByUuidRequestParams RequestParams, OnGetCreatorByUuid200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
-        {
-            string uri = "https://api.nexus.gg/v1/attributions/creators/{creatorSlugOrId}";
-            uri = uri.Replace("{creatorSlugOrId}", RequestParams.creatorSlugOrId);
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
-            {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
-                yield return webRequest.SendWebRequest();
-                switch (webRequest.responseCode)
-                {
-                    case 200:
-                        if (ResponseCallback != null)
-                        {
-                            var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetCreatorByUuid200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
-                            ResponseCallback?.Invoke(callbackData0);
-                        }
-
-                        break;
-                    default:
-                        ErrorCallback?.Invoke(webRequest.responseCode);
-                        break;
-                }
-            }
-        }
-
-        public delegate void OnGetPing200ResponseDelegate();
-        public static IEnumerator StartGetPingRequest(OnGetPing200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
-        {
-            string uri = "https://api.nexus.gg/v1/attributions/ping";
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
-            {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
-                yield return webRequest.SendWebRequest();
-                switch (webRequest.responseCode)
-                {
-                    case 200:
-                        if (ResponseCallback != null)
-                        {
-                            ResponseCallback?.Invoke();
-                        }
-
-                        break;
-                    default:
-                        ErrorCallback?.Invoke(webRequest.responseCode);
-                        break;
-                }
+                    break;
+                default:
+                    ErrorCallback?.Invoke(webRequest.responseCode);
+                    break;
             }
         }
     }
-}
+
+    public struct GetMemberByCodeOrUuidRequestParams
+    {
+        public string memberCodeOrID { get; set; }
+    }
+
+    public delegate void OnGetMemberByCodeOrUuid200ResponseDelegate(NexusSDK.AttributionAPI.Member Param0);
+    public static IEnumerator StartGetMemberByCodeOrUuidRequest(GetMemberByCodeOrUuidRequestParams RequestParams, OnGetMemberByCodeOrUuid200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
+    {
+        string uri = "https://api.nexus.gg/v1/manage/members/{memberCodeOrID}";
+        uri = uri.Replace("{memberCodeOrID}", RequestParams.memberCodeOrID);
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+            yield return webRequest.SendWebRequest();
+            switch (webRequest.responseCode)
+            {
+                case 200:
+                    if (ResponseCallback != null)
+                    {
+                        var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.Member>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
+                        ResponseCallback?.Invoke(callbackData0);
+                    }
+
+                    break;
+                default:
+                    ErrorCallback?.Invoke(webRequest.responseCode);
+                    break;
+            }
+        }
+    }
+
+    public struct GetMemberByPlayerIdRequestParams
+    {
+        public string playerId { get; set; }
+    }
+
+    public struct GetMemberByPlayerId200Response
+    {
+        public string id { get; set; }
+
+        public string name { get; set; }
+
+        public string playerId { get; set; }
+
+        public string logoImage { get; set; }
+
+        public string profileImage { get; set; }
+
+        public NexusSDK.AttributionAPI.Code[] codes { get; set; }
+
+        public struct groups_Struct_Element
+        {
+            public string groupName { get; set; }
+
+            public string groupId { get; set; }
+
+            public string status { get; set; }
+        }
+
+        public NexusSDK.AttributionAPI.GetMemberByPlayerId200Response.groups_Struct_Element[] groups { get; set; }
+    }
+
+    public delegate void OnGetMemberByPlayerId200ResponseDelegate(NexusSDK.AttributionAPI.GetMemberByPlayerId200Response Param0);
+    public static IEnumerator StartGetMemberByPlayerIdRequest(GetMemberByPlayerIdRequestParams RequestParams, OnGetMemberByPlayerId200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
+    {
+        string uri = "https://api.nexus.gg/v1/manage/members/player/{playerId}";
+        uri = uri.Replace("{playerId}", RequestParams.playerId);
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+            yield return webRequest.SendWebRequest();
+            switch (webRequest.responseCode)
+            {
+                case 200:
+                    if (ResponseCallback != null)
+                    {
+                        var callbackData0 = JsonConvert.DeserializeObject<NexusSDK.AttributionAPI.GetMemberByPlayerId200Response>(webRequest.downloadHandler.text, new JsonSerializerSettings{NullValueHandling = NullValueHandling.Ignore});
+                        ResponseCallback?.Invoke(callbackData0);
+                    }
+
+                    break;
+                default:
+                    ErrorCallback?.Invoke(webRequest.responseCode);
+                    break;
+            }
+        }
+    }
+
+    public delegate void OnGetAttributionsPing200ResponseDelegate();
+    public static IEnumerator StartGetAttributionsPingRequest(OnGetAttributionsPing200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
+    {
+        string uri = "https://api.nexus.gg/v1/attributions/ping";
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+            yield return webRequest.SendWebRequest();
+            switch (webRequest.responseCode)
+            {
+                case 200:
+                    if (ResponseCallback != null)
+                    {
+                        ResponseCallback?.Invoke();
+                    }
+
+                    break;
+                default:
+                    ErrorCallback?.Invoke(webRequest.responseCode);
+                    break;
+            }
+        }
+    }
+} }
