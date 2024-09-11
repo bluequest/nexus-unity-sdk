@@ -1,9 +1,3 @@
-//Example SDK For Nexus SDK Generator
-/*  NOTE NOTE NOTE
-*   GENERATED CODE
-*   ANY CHANGES TO THIS FILE WILL BE OVERWRITTEN
-*	PLEASE MAKE ANY CHANGES TO THE SDK TEMPLATES IN THE SDK GENERATOR
-*/
 using System;
 using System.Collections;
 using System.Collections.Generic;
