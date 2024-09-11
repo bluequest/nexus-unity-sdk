@@ -1,6 +1,6 @@
 {
   "name": "nexus.sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Nexus SDK",
   "description": "This is the package for using the Nexus SDK",
   "unity": "2021.3",
@@ -12,7 +12,7 @@
   ],
   "author": {
     "name": "Nexus",
-    "email": "unity@example.com",
-    "url": "https://www.unity3d.com"
+    "email": "help@nexus.gg",
+    "url": "https://docs.nexus.gg"
   }
 }
