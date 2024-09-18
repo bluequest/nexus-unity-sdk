@@ -1,3 +1,7 @@
+/*  NOTE: GENERATED CODE
+ *   ANY CHANGES TO THIS FILE WILL BE OVERWRITTEN
+ *   PLEASE MAKE ANY CHANGES TO THE SDK TEMPLATES IN THE SDK GENERATOR
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -218,6 +222,8 @@ namespace NexusSDK
         {
             public string id { get; set; }
 
+            public string memberId { get; set; }
+
             public string code { get; set; }
 
             public string memberPlayerId { get; set; }
@@ -378,7 +384,7 @@ namespace NexusSDK
                 yield break;
             }
 
-            string uri = "https://api.nexus.gg/v1/manage/members";
+            string uri = SDKInitializer.ApiBaseUrl + "/manage/members";
             List<string> parameterStrings = new List<string>{};
             parameterStrings.Add("page=" + RequestParams.page);
             parameterStrings.Add("pageSize=" + RequestParams.pageSize);
@@ -391,7 +397,7 @@ namespace NexusSDK
             uri += string.Join("&", parameterStrings);
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+                webRequest.SetRequestHeader("x-shared-secret", SDKInitializer.ApiKey);
                 yield return webRequest.SendWebRequest();
                 switch (webRequest.responseCode)
                 {
@@ -420,7 +426,7 @@ namespace NexusSDK
         public delegate void OnGetMemberByCodeOrUuid200ResponseDelegate(NexusSDK.AttributionAPI.Member Param0);
         public static IEnumerator StartGetMemberByCodeOrUuidRequest(GetMemberByCodeOrUuidRequestParams RequestParams, OnGetMemberByCodeOrUuid200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
         {
-            string uri = "https://api.nexus.gg/v1/manage/members/{memberCodeOrID}";
+            string uri = SDKInitializer.ApiBaseUrl + "/manage/members/{memberCodeOrID}";
             uri = uri.Replace("{memberCodeOrID}", RequestParams.memberCodeOrID);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
@@ -432,7 +438,7 @@ namespace NexusSDK
             uri += string.Join("&", parameterStrings);
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+                webRequest.SetRequestHeader("x-shared-secret", SDKInitializer.ApiKey);
                 yield return webRequest.SendWebRequest();
                 switch (webRequest.responseCode)
                 {
@@ -461,7 +467,7 @@ namespace NexusSDK
         public delegate void OnGetMemberByPlayerId200ResponseDelegate(NexusSDK.AttributionAPI.Member Param0);
         public static IEnumerator StartGetMemberByPlayerIdRequest(GetMemberByPlayerIdRequestParams RequestParams, OnGetMemberByPlayerId200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
         {
-            string uri = "https://api.nexus.gg/v1/manage/members/player/{playerId}";
+            string uri = SDKInitializer.ApiBaseUrl + "/manage/members/player/{playerId}";
             uri = uri.Replace("{playerId}", RequestParams.playerId);
             List<string> parameterStrings = new List<string>{};
             if (RequestParams.groupId != "")
@@ -473,7 +479,7 @@ namespace NexusSDK
             uri += string.Join("&", parameterStrings);
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+                webRequest.SetRequestHeader("x-shared-secret", SDKInitializer.ApiKey);
                 yield return webRequest.SendWebRequest();
                 switch (webRequest.responseCode)
                 {
@@ -495,10 +501,10 @@ namespace NexusSDK
         public delegate void OnGetAttributionsPing200ResponseDelegate();
         public static IEnumerator StartGetAttributionsPingRequest(OnGetAttributionsPing200ResponseDelegate ResponseCallback, ErrorDelegate ErrorCallback)
         {
-            string uri = "https://api.nexus.gg/v1/attributions/ping";
+            string uri = SDKInitializer.ApiBaseUrl + "/attributions/ping";
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                webRequest.SetRequestHeader("x-shared-secret", APIKeyContainer.APIKey);
+                webRequest.SetRequestHeader("x-shared-secret", SDKInitializer.ApiKey);
                 yield return webRequest.SendWebRequest();
                 switch (webRequest.responseCode)
                 {
