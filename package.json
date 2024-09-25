@@ -14,5 +14,8 @@
     "name": "Nexus",
     "email": "help@nexus.gg",
     "url": "https://docs.nexus.gg"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2" 
   }
 }
