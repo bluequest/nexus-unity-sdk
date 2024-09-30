@@ -1,0 +1,19 @@
+{
+    "name": "nexus.nexussdk.Editor.Tests",
+    "references": [
+        "nexus.nexussdk.Runtime",
+        "nexus.nexussdk.Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

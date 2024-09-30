@@ -1,21 +1,19 @@
 {
-  "name": "nexus.sdk",
-  "version": "0.1.0",
-  "displayName": "Nexus SDK",
-  "description": "This is the package for using the Nexus SDK",
-  "unity": "2021.3",
-  "unityRelease": "22f1",
-  "keywords": [
-    "Creator program",
-    "Nexus.gg",
-    "Nexus Chrono Creator Programs"
-  ],
-  "author": {
-    "name": "Nexus",
-    "email": "help@nexus.gg",
-    "url": "https://docs.nexus.gg"
-  },
-  "dependencies": {
-    "com.unity.nuget.newtonsoft-json": "3.0.2" 
-  }
+    "name": "gg.nexus.nexussdk",
+    "version": "0.2.0",
+    "displayName": "Nexus Creator Program SDK",
+    "description": "Seamlessly integrate Nexus API features, including creator code validation, with minimal setup.",
+    "unity": "2021.3",
+    "keywords": [
+        "Nexus",
+        "API",
+        "Creator Code",
+        "Nexus API",
+        "Creator program"
+    ],
+    "author": {
+        "name": "Chrono, Inc",
+        "email": "support@nexus.gg",
+        "url": "https://www.nexus.gg"
+    }
 }
