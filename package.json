@@ -15,5 +15,8 @@
         "name": "Chrono, Inc",
         "email": "support@nexus.gg",
         "url": "https://www.nexus.gg"
+    },
+    "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2" 
     }
 }
